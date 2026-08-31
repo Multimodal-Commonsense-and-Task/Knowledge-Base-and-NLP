@@ -112,3 +112,7 @@
 * HARP: Hesitation-Aware Reframing in Transformer Inference Pass (NAACL 2025) - Romain Storaï and Seung-won Hwang.
 
   * This paper presents HARP, a simple modification to the "off-the-shelf" Transformer forward pass that selectively applies additional computation when the model hesitates.
+
+* PROM: Pivoted and Regulated Optimization for Multilingual Instruction Learning (NAACL 2025) - Jaeseong Lee, Seung-won Hwang, Hojin Lee, Yunju Bak and Changmin Lee.
+
+  * This paper disentangles the roles of English and target-language data in multilingual instruction tuning to mitigate their negative interference.
