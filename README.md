@@ -95,4 +95,4 @@
 
 * Counterfactual-Consistency Prompting for Relative Temporal Understanding in Large Language Models (ACL 2025) - Jongho Kim and Seung-won Hwang.
 
- * This paper uses counterfactual questions and collective constraints to improve the consistency of large language models in predicting temporal relations between events.
+  * This paper uses counterfactual questions and collective constraints to improve the consistency of large language models in predicting temporal relations between events.
