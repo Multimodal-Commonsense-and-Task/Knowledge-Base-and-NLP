@@ -1,0 +1,6 @@
+# @package _group_
+
+name: hard
+train_file: dataset/train.hard.json.gzip
+dev_file: dataset/dev.hard.json
+test_file: dataset/test.hard.json

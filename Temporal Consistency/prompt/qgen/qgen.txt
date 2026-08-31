@@ -1,0 +1,28 @@
+Suggest the related questions that help answer the question below.
+The related questions should be (1) The questions about same time point but with different directions (e.g. during, before, after), or (2) questions about different time points that are mentioned in the context. 
+The related questions should be numbered (1., 2., ... ), one question for each line.
+
+Example
+
+Context: John J . Pettus John Jones Pettus ( October 9 , 1813January 25 , 1867 ) was an American politician and lawyer who served as the 23rd Governor of Mississippi , from 1859 to 1863 . Prior to being elected in his own right to full gubernatorial terms in 1859 and 1861 , he served as acting governor from January 5 to 10 , 1854 , following the resignation of Henry S . Foote . A member of the Democratic Party , Pettus had previously been a Mississippi state representative , a member and president of the Mississippi Senate . He strongly supported Mississippis secession from the Union in 1861 and sought cooperation with the Confederate States Government . Early life . John Jones Pettus was born on October 9 , 1813 in Wilson County , Tennessee , to John Jones , a farmer , and his wife Alice Taylor ( n\u00e9e Winston ) Pettus . He was the brother of Edmund Pettus . He was raised in Limestone County , Alabama , after his father moved the family from Tennessee . Only nine when his father died , Pettus helped out with chores and was educated at home by his mother . Pettus settled in Mississippi in 1835 . After a brief stay in Sumter County , Alabama , where he studied law , he opened a law practice in Scooba , Mississippi , where in the 1840s he married a cousin , Permelia Winston . He became a successful farmer and by 1850 owned with twenty-four slaves . Political career . In 1844 , Pettus represented Kemper County in the Mississippi House of Representatives . In 1848 , he was elected to the Mississippi Senate . In 1853 , while Governor Henry S . Foote was waiting for the January 11 inauguration of John J . McRae , Foote grew bitter and angry , addressing the legislative session by announcing that he had considered resigning in protest once the election results came in . At noon at January 5 , 1854 , Footes resignation was received by the state senate . The Mississippi Constitution of 1832 had abolished the office of lieutenant governor . Pettus , as President of the Mississippi Senate , was next in seniority and sworn at noon on January 7 , 1854 . He held the governorship until McRae was sworn in on January 10 , 1854 . His only recorded act during these 120 hours was to order a special session in Noxubee County to fill the office of a deceased state representative , Francis Irby . On January 11 , McRae was inaugurated as Governor and Pettus returned as senate president . During the 1850s , he became identified as the Mississippi Fire-eater , a term referring to Southerners supporting secession . In 1859 , he was elected Governor . In his inaugural address , he said that the souths only way to maintain slavery was secession and called for the establishment of a southern confederacy . Following President Abraham Lincolns election , on November 26 , 1860 , Pettus called for a Special Session of the Legislature and urged the Legislature to call for a convention to withdraw Mississippi from the Union . The Legislature called for a Secession Convention which convened in Jackson on January 7 , 1861 . Two days later , Mississippi officially seceded from the Union . On February 4 , 1861 , along with five other slave states , the Confederate States of America was established at Montgomery , Alabama . Pettus was re-elected in the fall of 1861 . Pettus was succeeded by Charles Clark . Later life . Ineligible under the Mississippi Constitution to run for a third term , Pettus was commissioned a colonel in the state militia . In September 1865 he took the oath of allegiance to the United States government , but failed on three separate occasions to receive a presidential pardon . After the war , he relocated to Pulaski County ( present-day Lonoke County ) , Arkansas . Pettus died on January 25 , 1867 , of pneumonia and is buried in the Flat Bayou Cemetery , Jefferson County , Arkansas .
+
+Question 1: Which position did John J. Pettus hold in early 1860s?
+
+Related questions 1:
+The question is asking the position that John J. Pettus hold, regarding the time point early 1860s. The time points mentioned in the context and close to early 1860s is 1861 and 1863. therefore, related questions are
+1. Which positions did John J. Pettus hold during his entire life?
+2. Which position did John J. Pettus hold before 1861?
+3. Which position did John J. Pettus hold after 1863?
+4. Which position did John J. Pettus hold between 1861 and 1863?
+
+Question 2: Which position did John J. Pettus hold in Aug 1850?
+
+Related questions 2:
+The question is asking the position that John J. Pettus hold, regarding the time point August 1850. The time points mentioned in the context and close to August 1850 is 1848 and 1853. Therefore, related questions are
+1. Which positions did John J. Pettus hold during his entire life?
+2. Which position did John J. Pettus hold after 1848?
+3. Which position did John J. Pettus hold before 1853?
+4. Which position did John J. Pettus hold in 1850?
+
+Test:
+

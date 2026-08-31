@@ -1,0 +1,23 @@
+Answer the following question. You should follow: Step 1. Paraphrase a question to a more generic step-back question, and answer it. Step 2. Answer the original question with the answer from Step 1. Final answer should be simple phrases.
+
+
+Example:
+
+Story: Anna Karina Anna Karina ( born Hanne Karin Bayer , 22 September 194014 December 2019 ) was a Danish-French film avant garde actress , director , writer , and singer . She was French New Wave director Jean-Luc Godards muse in the 1960s , performing in several of his films , including The Little Soldier , A Woman Is a Woman , My Life to Live , ( Band of Outsiders ) , ( Crazy Pete ) and Alphaville . For her performance in A Woman Is a Woman , Karina won the Silver Bear Award for Best Actress at the Berlin Film Festival . In 1972 , Karina set up a production company for her directorial debut , Vivre ensemble ( 1973 ) , which screened in the Critics Week lineup at the 26th Cannes Film Festival . She also directed the French-Canadian film Victoria ( 2008 ) . In addition to her work in cinema , she worked as a singer , and wrote several novels . Karina was an icon of 1960s cinema , and referred to as the effervescent free spirit of the French New Wave , with all of the scars that the position entails . The New York Times described her as one of the screens great beauties and an enduring symbol of the French New Wave . Personal life . While working together on , Karina and Godard began a relationship and married in 1961 . Eventually , Karina served as a cinematic muse to Godard , appearing in eight of his films , including , and , during their five year marriage and after . Karina liked being the muse . How could I not be honoured ? she told Xan Brooks of The Guardian in 2016 . Maybe it\u2019s too much , it sounds so pompous . But of course I\u2019m always very touched to hear people say that . Because Jean-Luc gave me a gift to play all of those parts . It was like Pygmalion , you know ? I was Eliza Doolittle and he was the teacher . At this , she briefly channels Henry Higgins . By Jove , she says . I think she\u2019s got it . The couple became , according to The Independent , one of the most celebrated pairings of the 1960s . A writer for Filmmaker magazine called their work arguably the most influential body of work in the history of cinema . Despite the critical success , their relationship behind the scenes was described as tumultuous ; they fought on film sets , Karina fell ill several times , and Godard was often absent without explanation . One Godard film from this period which does not feature Karina , Contempt ( 1963 ) , is said to be based on their difficult relationship . The couple divorced in 1965 . Karina said in spring 2016 that she and Godard no longer spoke to each other . She described the relationship in an interview with W magazine:It was all very exciting from the beginning . Of course we have a great love story and all that , but we were so different . He was 10 years older than me . He was very strange . He would go away and come back three weeks later .. . It was difficult , and I was a young girl , not even 21\u2014at the time Godard was 30 . I know he didnt mean to hurt me , but he did . He was never there , he was never coming back , and I never knew where he was . He drove me a bit crazy.After divorcing Godard , Karina remarried three times ; she was married to French actors Pierre Fabre from 1968 to 1974 and Daniel Duval from 1978 to 1981 , and to American film director Dennis Berry from 1982 until her death . Karina died at the age of 79 on Saturday , December 14 , 2019 , at a hospital in Paris . According to her agent , Laurent Balandras , the cause of death was cancer . However , her husband , Dennis Berry , said that the cause was not cancer , but a complication following a muscular rupture .
+
+Question: Who was the spouse of Anna Karina from 1968 to 1974?
+
+Answer:
+Step 1: Identify Anna Karina’s spouses.
+Jean-Luc Godard (1961–1965)
+Pierre Fabre (1968–1974)
+Daniel Duval (1978–1981)
+Dennis Berry (1982–1994)
+
+Step 2: Determine which spouse was married to Anna Karina from 1968 to 1974. 
+Jean-Luc Godard was married to Anna Karina from 1961 to 1965, so he is not the correct answer. 
+Pierre Fabre was married to Anna Karina from 1968 to 1974, so he is the correct answer. 
+Daniel Duval was married to Anna Karina from 1978 to 1981, so he is not the correct answer. 
+Dennis Berry was married to Anna Karina from 1982 to 1994, so he is not the correct answer. 
+
+Final answer: Pierre Fabre.

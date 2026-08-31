@@ -92,3 +92,7 @@
 * Intended Target Identification for Anomia Patients with Gradient-based Selective Augmentation (EMNLP Findings 2024) - Jongho Kim, Romain Storaï and Seung-won Hwang.
 
   * This paper improves LM-based intended target identification for anomia patients by using gradient-based selective augmentation to handle semantic paraphasia and unseen relevant terms.
+
+* Counterfactual-Consistency Prompting for Relative Temporal Understanding in Large Language Models (ACL 2025) - Jongho Kim and Seung-won Hwang.
+
+ * This paper uses counterfactual questions and collective constraints to improve the consistency of large language models in predicting temporal relations between events.
