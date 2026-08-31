@@ -88,3 +88,7 @@
 * Coffee-Gym: An Environment for Learning Feedback for Code Editing (EMNLP 2024) - Hyungjoo Chae, Taeyoon Kwon, Seungjun Moon, Yongho Song, Dongjin Kang, Kai Tzu-iunn Ong, Beong-woo Kwak, Seonghyeon Bae, Seung-won Hwang, and Jinyoung Yeo.
 
   * This paper presents Coffee-Gym, a comprehensive RL environment for training models that provide feedback on code editing.
+
+* Intended Target Identification for Anomia Patients with Gradient-based Selective Augmentation (EMNLP Findings 2024) - Jongho Kim, Romain Storaï and Seung-won Hwang.
+
+  * This paper improves LM-based intended target identification for anomia patients by using gradient-based selective augmentation to handle semantic paraphasia and unseen relevant terms.
