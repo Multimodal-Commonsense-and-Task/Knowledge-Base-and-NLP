@@ -100,3 +100,7 @@
 * Adaptive Retrieval for Reasoning (ACL 2026) - Jongho Kim, Jaeyoung Kim, Jihyuk Kim, Yu Jin Kim, Seung-won Hwang and Moontae Lee.
 
   * This paper proposes REPAIR, which uses reasoning plans as dense feedback signals to selectively guide adaptive retrieval and recover missing bridge documents for reasoning-intensive retrieval.
+
+* Query Variant Detection Using Retriever as Environment (NAACL 2025 industry) - Minji Seo, Youngwon Lee, Seung-won Hwang, Seoho Song, Hee-Cheol Seo and Young-In Song.
+
+  * This paper leverages the retriever as an environment, using retrieval outcomes as feedback to identify semantically equivalent query variants.
