@@ -104,3 +104,7 @@
 * Query Variant Detection Using Retriever as Environment (NAACL 2025 industry) - Minji Seo, Youngwon Lee, Seung-won Hwang, Seoho Song, Hee-Cheol Seo and Young-In Song.
 
   * This paper leverages the retriever as an environment, using retrieval outcomes as feedback to identify semantically equivalent query variants.
+
+* Interventional Speech Noise Injection for ASR Generalizable Spoken Language Understanding (EMNLP 2024) - YeonJoon Jung, Jaeseong Lee, Seungtaek Choi, Dohyeon Lee, Minsoo Kim and Seung-won Hwang.
+
+  * This paper proposes an interventional speech noise augmentation method that reduces ASR-specific bias by removing non-causal noise effects, improving the robustness of spoken language understanding to unseen ASR systems.
