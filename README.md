@@ -108,3 +108,7 @@
 * Interventional Speech Noise Injection for ASR Generalizable Spoken Language Understanding (EMNLP 2024) - YeonJoon Jung, Jaeseong Lee, Seungtaek Choi, Dohyeon Lee, Minsoo Kim and Seung-won Hwang.
 
   * This paper proposes an interventional speech noise augmentation method that reduces ASR-specific bias by removing non-causal noise effects, improving the robustness of spoken language understanding to unseen ASR systems.
+
+* HARP: Hesitation-Aware Reframing in Transformer Inference Pass (NAACL 2025) - Romain Storaï and Seung-won Hwang.
+
+  * This paper presents HARP, a simple modification to the "off-the-shelf" Transformer forward pass that selectively applies additional computation when the model hesitates.
