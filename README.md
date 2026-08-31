@@ -96,3 +96,7 @@
 * Counterfactual-Consistency Prompting for Relative Temporal Understanding in Large Language Models (ACL 2025) - Jongho Kim and Seung-won Hwang.
 
   * This paper uses counterfactual questions and collective constraints to improve the consistency of large language models in predicting temporal relations between events.
+
+* Adaptive Retrieval for Reasoning (ACL 2026) - Jongho Kim, Jaeyoung Kim, Jihyuk Kim, Yu Jin Kim, Seung-won Hwang and Moontae Lee.
+
+  * This paper proposes REPAIR, which uses reasoning plans as dense feedback signals to selectively guide adaptive retrieval and recover missing bridge documents for reasoning-intensive retrieval.
