@@ -128,3 +128,7 @@
 * Relevance to Utility: Process-Supervised Rewrite for RAG (ACL Findings 2026) - Jaeyoung Kim, Jongho Kim, Seung-won Hwang, Seoho Song and Young-In Song.
 
   * This paper proposes R2U, which learns document rewriting from downstream answer utility rather than retrieval relevance through process supervision.
+
+* UnIte: Uncertainty-based Iterative Document Sampling for Domain Adaptation in Information Retrieval (ACL Findings 2026) - Jongyoon Kim, Minseong Hwang and Seung-won Hwang.
+
+  * This paper proposes UnIte, which filters inherently noisy documents using aleatoric uncertainty and prioritizes informative ones using epistemic uncertainty for retrieval domain adaptation.
