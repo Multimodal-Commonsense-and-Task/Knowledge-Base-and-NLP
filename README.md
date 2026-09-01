@@ -124,3 +124,7 @@
 * Beyond Markovian Forgetfulness: Episodic Memory for Reasoning-Intensive Retrieval (ACL 2026) - Dohyeon Lee, Yeonseok Jeong and Seung-won Hwang.
 
   * This paper proposes Episodic Memory for Retrieval (EMR), which augments state-based retrieval with episodic memory to avoid repetitive reasoning cycles.
+
+* Relevance to Utility: Process-Supervised Rewrite for RAG (ACL Findings 2026) - Jaeyoung Kim, Jongho Kim, Seung-won Hwang, Seoho Song and Young-In Song.
+
+  * This paper proposes R2U, which learns document rewriting from downstream answer utility rather than retrieval relevance through process supervision.

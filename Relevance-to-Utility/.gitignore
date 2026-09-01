@@ -1,0 +1,10 @@
+cache/*
+outputs
+prev_trial
+**/__pycache__
+**/*.gz
+**/*.bz2
+data/**/*.jsonl
+data/**/*.json
+trial*
+temp_*.json

@@ -1,0 +1,39 @@
+# Script Arguments
+dataset_dir: ./datasets
+model_name_or_path: /data/FIRST/models/rewriting/conditional_comb_f1_1/Llama-3.2-1B-Instruct/llama-3.2-1b-comb-f1-1-step-1800
+output_dir: ./models/train_f1_1_0_01_k_docs
+num_train_epochs: 3
+beta: 0.1
+
+n_toy: -1
+eval_split: "test"
+chat: false
+
+# Data training arguments
+# For definitions, see: src/h4/training/config.py
+dataset_mixer:
+  HuggingFaceH4/ultrafeedback_binarized: 1.0
+dataset_name: train_f1_1_0_01_k_docs.jsonl
+preprocessing_num_workers: 12
+
+# DPOTrainer arguments
+bf16: true
+do_eval: false
+gradient_accumulation_steps: 2
+gradient_checkpointing: true
+# hub_model_id: llama2-7b-dpo-full
+learning_rate: 5.0e-7
+log_level: info
+logging_steps: 10
+lr_scheduler_type: linear
+max_length: 4096
+max_prompt_length: 4096
+optim: rmsprop
+per_device_train_batch_size: 4
+# per_device_eval_batch_size: 4
+push_to_hub: false
+save_steps: 500
+save_strategy: "steps"
+save_total_limit: null
+seed: 42
+warmup_ratio: 0.1
