@@ -116,3 +116,7 @@
 * PROM: Pivoted and Regulated Optimization for Multilingual Instruction Learning (NAACL 2025) - Jaeseong Lee, Seung-won Hwang, Hojin Lee, Yunju Bak and Changmin Lee.
 
   * This paper disentangles the roles of English and target-language data in multilingual instruction tuning to mitigate their negative interference.
+
+* HIL: Hybrid Isotropy Learning for Zero-shot Performance in Dense retrieval (NAACL 2024) - Jaeyoung Kim, Dohyeon Lee and Seung-won Hwang.
+
+  * This paper proposes a Hybrid Isotropy Learning (HIL) architecture that balances isotropic and anisotropic representations for improved zero-shot dense retrieval.
