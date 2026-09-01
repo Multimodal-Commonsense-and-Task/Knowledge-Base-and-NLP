@@ -132,3 +132,15 @@
 * UnIte: Uncertainty-based Iterative Document Sampling for Domain Adaptation in Information Retrieval (ACL Findings 2026) - Jongyoon Kim, Minseong Hwang and Seung-won Hwang.
 
   * This paper proposes UnIte, which filters inherently noisy documents using aleatoric uncertainty and prioritizes informative ones using epistemic uncertainty for retrieval domain adaptation.
+
+* RaDA: Retrieval-augmented Web Agent Planning with LLMs (ACL Findings 2024) - Minsoo Kim, Victor Bursztyn, Eunyee Koh, Shunan Guo and Seung-won Hwang.
+
+  * This paper proposes RaDA, which dynamically retrieves exemplars for both task decomposition and action generation, enabling Web agent planning without manually crafted exemplars.
+
+* Smarter, Not Harder: Training-Free Adaptive Computation for Transformers (ACL Findings 2025) - Romain Storaï, Jaeseong Lee and Seung-won Hwang.
+
+  * This paper proposes IMPACT, a PACT method that perturbs network weights rather than input embeddings, enabling efficient and deterministic adaptive computation with KV-cache reuse.
+
+* tRAG: Term-level Retrieval-Augmented Generation for Domain-Adaptive Retrieval (NAACL 2025) - Dohyeon Lee, Jongyoon Kim, Jihyuk Kim, Seung-won Hwang and Joonsuk Park.
+
+  * This paper proposes tRAG, which retrieves domain-specific terms from a corpus-level term pool to generate pseudo-queries with unseen terms for domain-adaptive retrieval.
