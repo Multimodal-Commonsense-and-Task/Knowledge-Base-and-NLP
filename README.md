@@ -120,3 +120,7 @@
 * HIL: Hybrid Isotropy Learning for Zero-shot Performance in Dense retrieval (NAACL 2024) - Jaeyoung Kim, Dohyeon Lee and Seung-won Hwang.
 
   * This paper proposes a Hybrid Isotropy Learning (HIL) architecture that balances isotropic and anisotropic representations for improved zero-shot dense retrieval.
+
+* Beyond Markovian Forgetfulness: Episodic Memory for Reasoning-Intensive Retrieval (ACL 2026) - Dohyeon Lee, Yeonseok Jeong and Seung-won Hwang.
+
+  * This paper proposes Episodic Memory for Retrieval (EMR), which augments state-based retrieval with episodic memory to avoid repetitive reasoning cycles.
