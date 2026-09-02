@@ -1,0 +1,133 @@
+{
+  "Fire_Risk": {
+    "description": "Risk of harm arising when an action interacts with hazardous heat, flame, or ignition-capable conditions present in the environment, potentially leading to fire, thermal damage, or injury affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Open_Flame_Ignition",
+        "definition": "Risk arising from exposure of combustible materials to an open flame source, enabling direct flame-driven ignition."
+      },
+      {
+        "name": "Thermal_Contact_Ignition",
+        "definition": "Risk arising from sustained thermal exposure between combustible materials and heat-emitting surfaces, enabling heat-driven ignition without direct flame."
+      },
+      {
+        "name": "Heat_Exhaust_Or_Ventilation_Blockage",
+        "definition": "Risk arising from restricted heat dissipation around powered appliances, enabling abnormal heat accumulation beyond safe operating limits."
+      }
+    ]
+  },
+  "Electrical_Risk": {
+    "description": "Risk of harm arising when an action interacts with hazardous electrical energy or faulty electrical components present in the environment, potentially leading to electric shock, arcing, fire, or injury affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Water_Induced_Electrical_Short",
+        "definition": "Risk arising from water or moisture bridging energized electrical components, enabling unintended conductive current paths."
+      },
+      {
+        "name": "Exposed_Or_Damaged_Wiring",
+        "definition": "Risk arising from loss of insulation integrity that enables direct contact or arcing between live conductors."
+      },
+      {
+        "name": "Metal_Conductor_Contact_With_Energized_Components",
+        "definition": "Risk arising from conductive objects forming physical or electromagnetic bridges with energized components, enabling uncontrolled current flow or arcing."
+      },
+      {
+        "name": "Mechanical_Stress_On_Electrical_Cables",
+        "definition": "Risk arising from physical deformation of cables that compromises internal conductor separation."
+      },
+      {
+        "name": "Failure_Of_Electrically_Powered_Appliances",
+        "definition": "Risk arising from internal electrical component malfunction that enables uncontrolled electrical discharge during operation."
+      }
+    ]
+  },
+  "Slip_Trip_Fall_Risk": {
+    "description": "Risk of bodily injury arising when an action involving movement interacts with hazardous floor-level or surface conditions present in the environment, potentially leading to loss of balance and harm affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Slippery_Surface_Loss_Of_Traction",
+        "definition": "Risk arising from reduced surface friction that prevents stable foot-ground force transfer during movement."
+      },
+      {
+        "name": "Trip_On_Floor_Level_Objects",
+        "definition": "Risk arising from floor-level obstructions that interrupt normal gait clearance."
+      },
+      {
+        "name": "Unstable_Or_Deformed_Floor_Coverings",
+        "definition": "Risk arising from movable or deformed coverings that shift under load and destabilize foot placement."
+      }
+    ]
+  },
+  "Cut_Sharp_Risk": {
+    "description": "Risk of bodily injury arising when an action interacts with hazardous sharp or pointed objects present in the environment, potentially leading to cuts, lacerations, or puncture injuries affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Sharp_Fragment_Or_Shattered_Material_Injury",
+        "definition": "Risk arising from irregular fractured materials that present sharp edges capable of causing harm upon bodily contact."
+      },
+      {
+        "name": "Hidden_Or_Partially_Obstructed_Sharp_Object",
+        "definition": "Risk arising when sharp objects are visually or physically obscured, increasing the likelihood of unexpected bodily contact."
+      },
+      {
+        "name": "Exposed_Sharp_Tool_Or_Blade_Contact",
+        "definition": "Risk arising from unguarded sharp tools positioned within routine reach or movement paths."
+      },
+      {
+        "name": "Damaged_Or_Splintered_Surface_Abrasion",
+        "definition": "Risk arising from degraded surfaces that present jagged or splintered contact points."
+      },
+      {
+        "name": "Pointed_Object_Puncture_Hazard",
+        "definition": "Risk arising from pointed objects that concentrate applied force into a small contact area during bodily contact."
+      }
+    ]
+  },
+  "Crush_Pinch_Risk": {
+    "description": "Risk of bodily injury arising when an action interacts with hazardous mechanical or structural conditions present in the environment, potentially resulting in crushing, pinching, or entrapment affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Unstable_Or_Falling_Object_Hazard",
+        "definition": "Risk arising from elevated or stacked objects that can shift or fall when stability is compromised."
+      },
+      {
+        "name": "Structural_Instability_And_Forced_Movement_Hazard",
+        "definition": "Risk arising from unstable or misaligned structures that collapse, tip, or move abruptly under applied force."
+      },
+      {
+        "name": "Compression_Or_Entrapment_Hazard",
+        "definition": "Risk arising when body parts become trapped or compressed between converging mechanical or structural elements."
+      }
+    ]
+  },
+  "Contamination_Infection_Risk": {
+    "description": "Risk of health impact arising when an action interacts with hazardous biological contaminants present in the environment, potentially leading to illness or infection affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Food_Related_Contamination",
+        "definition": "Risk arising from transfer of biological contaminants from raw, spoiled, or contaminated food sources to consumable items or utensils."
+      },
+      {
+          "name": "Environmental_Surface_And_Object_Contamination",
+          "definition": "Risk arising from transfer of contaminants from unclean environmental surfaces or objects through contact or use."
+      },
+      {
+          "name": "Biological_Waste_Contamination",
+          "definition": "Risk arising from exposure to biological waste materials that contaminate nearby surfaces or air through contact or dispersion."
+      }
+    ]
+  },
+  "Chemical_Toxic_Exposure_Risk": {
+    "description": "Risk of health impact arising when an action interacts with hazardous chemical substances or residues present in the environment, potentially leading to toxic effects through inhalation, ingestion, or skin contact affecting the agent and/or other nearby living beings.",
+    "mechanism": [
+      {
+        "name": "Toxic_Fume_Or_Aerosol_Inhalation",
+        "definition": "Risk arising from inhalation of airborne chemical vapors or aerosols generated through evaporation, spraying, or heating."
+      },
+      {
+        "name": "Chemical_Ingestion_Or_Contact_Contamination",
+        "definition": "Risk arising from chemical substances transferring to food, skin, or objects, enabling ingestion or dermal exposure."
+      }
+    ]
+  }
+}

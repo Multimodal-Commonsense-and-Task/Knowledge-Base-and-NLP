@@ -1,0 +1,6 @@
+train: dolma_flatten-train
+valid: dolma_flatten-valid
+tokenizer_name_or_path: gpt2
+cache_dir: dataset/
+wrap: True
+streaming: False

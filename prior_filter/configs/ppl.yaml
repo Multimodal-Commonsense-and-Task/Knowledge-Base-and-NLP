@@ -1,0 +1,5 @@
+dataset:
+dataset_path:
+seed: 42
+rand_value: 222
+batch_size: 64

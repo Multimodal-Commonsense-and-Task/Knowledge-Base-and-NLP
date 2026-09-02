@@ -1,0 +1,123 @@
+version: "3.9"
+
+services:
+  # =========================
+  # Agent A
+  # =========================
+  agent_a:
+    container_name: agent_a_${SESSION_ID?SESSION_ID is not set}
+    image: agent_service:latest
+    build:
+      context: ./agent_service
+    env_file:
+      - .env.agent
+    environment:
+      AGENT_ID: agent_a
+      AGENT_DB_HOST: agent_a_db
+      AGENT_DB_PORT: 5432
+      AGENT_DB_NAME: agent_a_db
+      AGENT_DB_USER: agent_a
+      AGENT_DB_PASSWORD: agent_a_password
+
+      SHARED_DB_HOST: shared_db
+      SHARED_DB_PORT: 5432
+      SHARED_DB_NAME: shared_db
+      SHARED_DB_USER: shared
+      SHARED_DB_PASSWORD: shared_password
+    volumes:
+      - ./workspaces/workspace_${SESSION_ID}/agent_a:/workspace/agent:rw
+      - ./workspaces/workspace_${SESSION_ID}/shared:/workspace/shared:rw
+      - ./agent_service:/app:rw
+    ports:
+      - "${AGENT_A_PORT?AGENT_A_PORT is not set}:8000"
+    depends_on:
+      - agent_a_db
+      - shared_db
+    networks:
+      - agent_net
+
+  # =========================
+  # Agent B
+  # =========================
+  agent_b:
+    container_name: agent_b_${SESSION_ID?SESSION_ID is not set}
+    image: agent_service:latest
+    build:
+      context: ./agent_service
+    env_file:
+      - .env.agent
+    environment:
+      AGENT_ID: agent_b
+      AGENT_DB_HOST: agent_b_db
+      AGENT_DB_PORT: 5432
+      AGENT_DB_NAME: agent_b_db
+      AGENT_DB_USER: agent_b
+      AGENT_DB_PASSWORD: agent_b_password
+
+      SHARED_DB_HOST: shared_db
+      SHARED_DB_PORT: 5432
+      SHARED_DB_NAME: shared_db
+      SHARED_DB_USER: shared
+      SHARED_DB_PASSWORD: shared_password
+    volumes:
+      - ./workspaces/workspace_${SESSION_ID}/agent_b:/workspace/agent:rw
+      - ./workspaces/workspace_${SESSION_ID}/shared:/workspace/shared:rw
+      - ./agent_service:/app:rw
+    ports:
+      - "${AGENT_B_PORT?AGENT_B_PORT is not set}:8000"
+    depends_on:
+      - agent_b_db
+      - shared_db
+    networks:
+      - agent_net
+
+  # =========================
+  # Agent A DB (private)
+  # =========================
+  agent_a_db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: agent_a_db
+      POSTGRES_USER: agent_a
+      POSTGRES_PASSWORD: agent_a_password
+    volumes:
+      - agent_a_db_data:/var/lib/postgresql/data
+    networks:
+      - agent_net
+
+  # =========================
+  # Agent B DB (private)
+  # =========================
+  agent_b_db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: agent_b_db
+      POSTGRES_USER: agent_b
+      POSTGRES_PASSWORD: agent_b_password
+    volumes:
+      - agent_b_db_data:/var/lib/postgresql/data
+    networks:
+      - agent_net
+
+  # =========================
+  # Shared DB (A & B)
+  # =========================
+  shared_db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: shared_db
+      POSTGRES_USER: shared
+      POSTGRES_PASSWORD: shared_password
+    volumes:
+      - shared_db_data:/var/lib/postgresql/data
+    networks:
+      - agent_net
+
+networks:
+  agent_net:
+    driver: bridge
+
+volumes:
+  agent_a_db_data:
+  agent_b_db_data:
+  shared_db_data:

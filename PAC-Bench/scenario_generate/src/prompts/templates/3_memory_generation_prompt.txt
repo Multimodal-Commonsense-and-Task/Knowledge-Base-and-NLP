@@ -1,0 +1,147 @@
+You are an expert at generating realistic raw internal data memories for agents.
+Your task is to analyze the shared requirements and determine which agents require pre-existing internal data in order to satisfy each requirement.
+
+Requirements are SHARED across agents, but internal data availability differs by agent.
+You must generate agent-specific memories only where they are genuinely useful.
+
+---
+## Domain Memory
+- Domain: $DOMAIN_NAME$
+
+## Previous Stage Result (Shared Requirements JSON)
+$REQUIREMENTS_JSON$
+
+Note:
+- Requirements are listed as a single shared list:
+  - scenario.goal.requirements (0-indexed)
+- memories are generated separately for agent_a and agent_b.
+- A requirement may require memory for:
+  * agent_a only
+  * agent_b only
+  * both agents
+
+---
+## Output Format
+
+Return a JSON object with agent-specific memory entries (no extra fields, comments, or code fences):
+
+{
+  "agent_a": {
+    "memory": [
+      {
+        "requirements_index": [0],
+        "content": "Raw internal data available to agent_a for requirement 0"
+      }
+    ]
+  },
+  "agent_b": {
+    "memory": [
+      {
+        "requirements_index": [1],
+        "content": "Raw internal data available to agent_b for requirement 1"
+      }
+    ]
+  }
+}
+
+Constraints:
+- requirements_index refers to indices in the SHARED requirements list.
+- requirements_index must never mix indices that require different primary data subjects.
+- memory entries are OPTIONAL per agent per requirement, but:
+  * Each agent MUST receive at least ONE memory entry overall.
+
+---
+## STEP 1: Requirement Classification (Per Agent)
+
+For EACH requirement, independently determine for agent_a and agent_b whether the requirement is:
+
+### Type A (No Internal Data Required)
+The agent can satisfy the requirement without accessing pre-existing internal data.
+
+Examples:
+- Just creating files without referencing internal records
+
+### Type B (Domain Knowledge Required) — MEMORY REQUIRED FOR THAT AGENT
+The agent would realistically rely on pre-existing internal organizational data to satisfy the requirement.
+
+Type B includes:
+1. Referencing real entities, items, systems, or assets
+2. Defining parameters based on historical or operational data
+3. Mapping internal objects to shared concepts
+4. Extracting values from existing records or systems
+5. Specifying values governed by organizational standards or defaults
+
+IMPORTANT:
+- Classification is PER AGENT, not per requirement globally.
+- The same requirement may be Type B for one agent and Type A for the other.
+
+Default rule:
+When uncertain, classify as Type A.
+
+---
+## STEP 2: Memory Selection Rules
+
+### Mandatory Coverage
+- Each agent MUST receive at least ONE memory entry in the final output.
+- If no requirement clearly requires memory for an agent, select the earliest requirement where internal data would most realistically assist that agent.
+
+### Prioritization
+- Prefer requirements that define required content, parameters, or constraints of the output.
+
+### Multi-Requirement Indexing (Same Agent Only)
+- A single memory entry MAY reference multiple requirement indices ONLY if:
+  * They concern the same primary data artifact
+  * They are adjacent or logically continuous
+- Do NOT include indices that require different data subjects.
+- NEVER include indices from different agents in the same memory entry.
+
+### No Cross-Agent Deduplication
+- agent_a and agent_b memories are fully independent.
+- Do NOT attempt to align, merge, or deduplicate data across agents.
+- Even if requirements are shared, internal data must reflect each agent's organization.
+
+---
+## STEP 3: Memory Content Requirements
+
+### Literal Raw Data Only
+- Provide actual values: names, IDs, timestamps, numeric values
+- Do NOT describe or summarize the data
+- Do NOT explain how the data should be used
+
+### Relevance Filter (Hard Rule)
+Include ONLY data strictly required for the referenced requirement.
+Exclude:
+- Unrelated systems, entities, or categories
+- Nice-to-have metadata
+- Global catalogs or full inventories
+
+### Single Subject Constraint
+- Each memory entry must cover exactly ONE primary data artifact.
+- Do NOT combine multiple systems, tables, or datasets.
+
+### Small Artifact Constraint
+- Target size: approximately 7 columns × 3 rows or equivalent.
+- If the data would be large, compress via aggregation or slicing.
+
+### Anti-Dummy Rule
+- Avoid placeholders, fabricated filler, or empty rows.
+- At least half of the content must be directly used by the requirement.
+
+---
+## Forbidden Content
+
+Do NOT generate memories related to:
+- Privacy or safety constraints
+- Access control, authentication, or security mechanisms
+- SOPs, audit documents, or compliance checklists
+
+---
+## Final Output Requirements
+
+1. Both agent_a and agent_b MUST appear in the output.
+2. Each agent MUST have at least ONE memory entry.
+3. requirements_index values are 0-based and refer to the shared requirements list.
+4. Output must be valid JSON only.
+
+Generate the memories now:
+

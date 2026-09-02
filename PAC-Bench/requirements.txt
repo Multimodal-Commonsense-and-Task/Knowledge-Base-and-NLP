@@ -1,0 +1,33 @@
+# PAC-BENCH unified dependencies
+
+# LLM clients and orchestration
+openai>=1.0.0
+anthropic>=0.18.0
+langchain>=0.3.0
+langgraph>=0.2.0
+langchain-openai>=0.2.0
+langchain-anthropic>=0.3.0
+langchain-mcp-adapters>=0.1.0
+
+# Environment and utilities
+python-dotenv>=1.0.1
+tqdm>=4.66.0
+typing-extensions>=4.0.0
+natsort>=8.4.0
+
+# API server
+fastapi>=0.115.0
+uvicorn>=0.30.0
+
+# Data/file processing
+pandas>=2.0.0
+pypandoc>=1.11
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+
+# Development
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.0.0

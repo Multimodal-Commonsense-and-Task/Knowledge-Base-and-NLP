@@ -1,0 +1,7 @@
+google-genai
+openai
+anthropic
+transformers==4.51.3
+ipdb
+pandas
+python-dotenv

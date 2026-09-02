@@ -1,0 +1,21 @@
+{
+    "filesystem": {
+        "command": "npx",
+        "args": [
+            "-y", "@modelcontextprotocol/server-filesystem", "{WORKSPACE_AGENT}", "{WORKSPACE_SHARED}"
+        ],
+        "transport": "stdio"
+    },
+    "word": {
+        "command": "bash",
+        "args": [
+            "-lc", "cd {WORKSPACE} && exec uvx --from office-word-mcp-server word_mcp_server"
+        ],
+        "transport": "stdio"
+    },
+    "excel": {
+        "command": "uvx",
+        "args": ["excel-mcp-server", "stdio"],
+        "transport": "stdio"
+    }
+}

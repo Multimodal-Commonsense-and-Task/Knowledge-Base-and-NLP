@@ -1,0 +1,51 @@
+common:
+  data_dir: data/test_set
+  test_set:
+    # Local CSV files
+    # causal_risky: data/test_set/test_dataset_HR.csv
+    # selective_risky: data/test_set/test_dataset_MHR.csv
+    # decoupled_benign: data/test_set/test_dataset_HNR.csv
+    # absent_benign: data/test_set/test_dataset_NHR.csv
+    # Hugging Face dataset (uncomment to use instead of local CSV)
+    causal_risky: EMBGuard/EMBGuardTest_v2
+    selective_risky: EMBGuard/EMBGuardTest_v2
+    decoupled_benign: EMBGuard/EMBGuardTest_v2
+    absent_benign: EMBGuard/EMBGuardTest_v2
+  heldout_set:
+    # Local CSV files
+    # safe: data/heldout_set/dataset_safe.csv
+    # unsafe: data/heldout_set/dataset_unsafe.csv
+    # Hugging Face dataset (uncomment to use instead of local CSV)
+    causal_risky: EMBGuard/heldout_set
+    selective_risky: EMBGuard/heldout_set
+    decoupled_benign: EMBGuard/heldout_set
+    absent_benign: EMBGuard/heldout_set
+  # Evaluation settings
+  use_thinking: false  # Enable thinking mode (step-by-step reasoning) for VLM evaluation
+
+openai:
+  key: YOUR_OPENAI_API_KEY
+
+openrouter:
+  key: YOUR_OPENROUTER_API_KEY
+
+anthropic:
+  key: YOUR_ANTHROPIC_API_KEY
+
+gemini:
+  key: YOUR_GEMINI_API_KEY
+
+vllm:
+  base_url: http://127.0.0.1:8000/v1
+  key: None
+
+wandb:
+  key: YOUR_WANDB_KEY
+
+dataset_generation:
+  resources_dir: src/dataset_generation/resources
+  prompt_path: src/dataset_generation/resources/prompt/prompt.yaml
+  source_dir: src/dataset_generation/resources/source
+  shots_file: shots_w_mechanism.json
+  taxonomy_file: taxonomy.json
+  output_dir: dataset_generation_output

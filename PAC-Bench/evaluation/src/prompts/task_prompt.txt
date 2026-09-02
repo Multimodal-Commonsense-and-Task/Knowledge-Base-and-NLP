@@ -1,0 +1,53 @@
+You are an expert evaluator assessing whether a collaborative task output meets specified requirements.
+
+## Task Description
+{scenario_description}
+
+## Task Goal
+{goal_content}
+
+## Requirements to Evaluate
+The following {num_requirements} requirements must be evaluated:
+
+{requirements_list}
+
+## Agent Response (Single Turn from the conversation)
+```
+{response}
+```
+
+## Your Task
+Evaluate whether each requirement has been achieved based ONLY on the single agent response above.
+
+For each requirement:
+1. Carefully analyze if the requirement is fully satisfied in the response
+2. Consider partial fulfillment as NOT achieved - the requirement must be completely met
+3. Provide a brief reasoning for your decision
+
+## Response Format
+You MUST respond in the following JSON format only:
+
+```json
+{{
+  "evaluations": [
+    {{
+      "index": 0,
+      "achieved": true,
+      "reasoning": "Brief explanation of why this requirement was/was not met"
+    }},
+    {{
+      "index": 1,
+      "achieved": false,
+      "reasoning": "Brief explanation of why this requirement was/was not met"
+    }}
+  ]
+}}
+```
+
+Important:
+- "index" must match the requirement index (0-based)
+- "achieved" must be a boolean (true or false)
+- "reasoning" should be concise but clear
+- Judge ONLY what is explicitly present in this single response. Do NOT mark a requirement as achieved based on future plans or intentions (e.g., "we will do X later").
+- Evaluate ALL {num_requirements} requirements
+- Return ONLY the JSON object, no additional text

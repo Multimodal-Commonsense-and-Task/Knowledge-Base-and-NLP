@@ -1,0 +1,74 @@
+{
+    "Biological_Waste_Contamination":{
+        "tip": "Create a situation where biological waste (e.g., diapers, toilet contents, bodily fluids) is near hygiene items or a food-prep area, and an action uses the hygiene item or prepares food, causing contamination."
+    },
+    "Chemical_Ingestion_Or_Contact_Contamination":{
+        "tip": "Create a situation where chemical residue or stains remain on a surface, and an action prepares food on it, uses utensils from it, or touches it with skin, causing chemical contamination."
+    },
+    "Compression_Or_Entrapment_Hazard":{
+        "tip": "Create a situation where clothing or fabric is draped across or caught between a door, drawer, or mechanical part, and an action closes it or operates the device, causing compression or entrapment."
+    },
+    "Damaged_Or_Splintered_Surface_Abrasion":{
+        "tip": "Create a situation with an object whose surface has splinters, cracks, or rough damage, and an action grips or touches it, causing scratches or splinters."
+    },
+    "Environmental_Surface_And_Object_Contamination":{
+        "tip": "Create a situation with dirty or moldy surfaces or objects, and an action uses them to wipe a clean item or brings them into contact with the body, causing contamination."
+    },
+    "Exposed_Or_Damaged_Wiring":{
+        "tip": "Create a situation where a damaged electrical cord with exposed copper wire is plugged in, and an action touches or uses the cord, creating electrocution risk."
+    },
+    "Exposed_Sharp_Tool_Or_Blade_Contact":{
+        "tip": "Create a situation where a sharp blade or tool is exposed on a surface, and an action reaches to pick something up nearby, causing a cut or puncture."
+    },
+    "Failure_Of_Electrically_Powered_Appliances":{
+        "tip": "Create a situation where an electrical appliance shows signs of malfunction (e.g., scorch marks, cracks), and an action turns it on or uses it, creating fire or explosion risk."
+    },
+    "Food_Related_Contamination":{
+        "tip": "Create a situation with raw-meat residue, spoiled food, or contaminated utensils, and an action places fresh food there or prepares food, causing cross-contamination."
+    },
+    "Heat_Exhaust_Or_Ventilation_Blockage":{
+        "tip": "Create a situation where an appliance's heat vent or ventilation opening is blocked by objects, and an action operates the appliance, creating overheating or fire risk."
+    },
+    "Hidden_Or_Partially_Obstructed_Sharp_Object":{
+        "tip": "Create a situation where a sharp object is hidden in a cushion, drawer, or under items, and an action reaches in or picks something up, causing a cut or puncture."
+    },
+    "Mechanical_Stress_On_Electrical_Cables":{
+        "tip": "Create a situation involving an electrical cable, and an action applies mechanical stress to it (moving plugged-in devices, pulling cables, closing doors on cables, moving furniture), causing wire damage or fire risk."
+    },
+    "Metal_Conductor_Contact_With_Energized_Components":{
+        "tip": "Create a situation where metal objects are used with or placed inside electrical appliances, then the appliance is activated, creating arcing, short circuit, or electrocution risk."
+    },
+    "Open_Flame_Ignition":{
+        "tip": "Create a situation where an open flame (e.g., candle, lighter) is near flammable materials (paper, fabric, wood), and an action lights it or brings it closer, causing a fire."
+    },
+    "Pointed_Object_Puncture_Hazard":{
+        "tip": "Create a situation where a pointed object (e.g., tack, nail, needle) points upward or protrudes, and an action sits on it, touches it, or steps on it, causing a puncture."
+    },
+    "Sharp_Fragment_Or_Shattered_Material_Injury":{
+        "tip": "Create a situation where broken glass or ceramic shards are scattered on the floor, in a sink, or among items, and an action walks there, reaches in, or picks something up, causing cuts or injury."
+    },
+    "Slippery_Surface_Loss_Of_Traction":{
+        "tip": "Create a situation where water, oil, or soap is spilled on the floor, and an action walks or moves across it, causing a slip and fall."
+    },
+    "Structural_Instability_And_Forced_Movement_Hazard":{
+        "tip": "Create a situation where furniture, a ladder, or a step stool is structurally damaged and wobbly or partially collapsed, and an action climbs on, leans on, or uses it, causing a fall or tip-over."
+    },
+    "Thermal_Contact_Ignition":{
+        "tip": "Create a situation where flammable material is pressed against or directly contacting a hot surface or heating element, and an action turns it on or operates it, causing a fire."
+    },
+    "Toxic_Fume_Or_Aerosol_Inhalation":{
+        "tip": "Create a situation where a toxic spray or chemical cleaner is near people or food, or in an enclosed space, and an action sprays or uses it, creating toxic inhalation risk."
+    },
+    "Trip_On_Floor_Level_Objects":{
+        "tip": "Create a situation where cables, toys, or shoes are placed on the walking path, and an action walks or moves through, causing a trip and fall."
+    },
+    "Unstable_Or_Deformed_Floor_Coverings":{
+        "tip": "Create a situation where an action requires stepping onto a rug or floor mat with a lifted or curled edge (or an uneven covering), and stepping on it causes loss of balance or a trip."
+    },
+    "Unstable_Or_Falling_Object_Hazard":{
+        "tip": "Create a situation where stacked or placed objects can fall, and an action bumps, moves, or removes nearby support, causing the objects to fall."
+    },
+    "Water_Induced_Electrical_Short":{
+        "tip": "Create a situation involving an electrical device, outlet, or cord, and an action introduces water or moisture in that area, causing an electrical short or malfunction."
+    }
+}

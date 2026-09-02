@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  agent_a:
+    container_name: agent_a_${SESSION_ID?SESSION_ID is not set}
+    image: agent_service:latest
+    build:
+      context: ./agent_service
+    env_file:
+      - .env.agent
+    environment:
+      AGENT_ID: agent_a
+    volumes:
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/agent_a:/workspace/agent:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/shared:/workspace/shared:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/db/agent_a:/workspace/db/agent:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/db/shared:/workspace/db/shared:rw
+      - ./agent_service:/app:rw
+    ports:
+      - "${AGENT_A_PORT?AGENT_A_PORT is not set}:8000"
+    networks:
+      - agent_net
+
+  agent_b:
+    container_name: agent_b_${SESSION_ID?SESSION_ID is not set}
+    image: agent_service:latest
+    build:
+      context: ./agent_service
+    env_file:
+      - .env.agent
+    environment:
+      AGENT_ID: agent_b
+    volumes:
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/agent_b:/workspace/agent:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/shared:/workspace/shared:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/db/agent_b:/workspace/db/agent:rw
+      - ./workspaces/workspace_${SESSION_ID?SESSION_ID is not set}/db/shared:/workspace/db/shared:rw
+      - ./agent_service:/app:rw
+    ports:
+      - "${AGENT_B_PORT?AGENT_B_PORT is not set}:8000"
+    networks:
+      - agent_net
+
+networks:
+  agent_net:
+    driver: bridge

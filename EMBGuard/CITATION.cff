@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use EMBGuard in your research, please cite this work."
+title: "EMBGuard: Constructing Hazard-Aware Guardrails for Safe Planning in Embodied Agents"
+authors:
+  - family-names: Choi
+    given-names: Dongwook
+  - family-names: Kwon
+    given-names: Taeyoon
+  - family-names: Jeong
+    given-names: Bogyung
+  - family-names: Kim
+    given-names: Minju
+  - family-names: Hwang
+    given-names: Yeonjun
+  - family-names: Kim
+    given-names: Hyojun
+  - family-names: Kim
+    given-names: Byungchul
+  - family-names: Jang
+    given-names: Young Kyun
+  - family-names: Yeo
+    given-names: Jinyoung
+year: 2026
+type: article
+url: "https://arxiv.org/abs/2605.30924"
+preferred-citation:
+  type: article
+  title: "EMBGuard: Constructing Hazard-Aware Guardrails for Safe Planning in Embodied Agents"
+  authors:
+    - family-names: Choi
+      given-names: Dongwook
+    - family-names: Kwon
+      given-names: Taeyoon
+    - family-names: Jeong
+      given-names: Bogyung
+    - family-names: Kim
+      given-names: Minju
+    - family-names: Hwang
+      given-names: Yeonjun
+    - family-names: Kim
+      given-names: Hyojun
+    - family-names: Kim
+      given-names: Byungchul
+    - family-names: Jang
+      given-names: Young Kyun
+    - family-names: Yeo
+      given-names: Jinyoung
+  journal: "arXiv preprint arXiv:2605.30924"
+  year: 2026
+  url: "https://arxiv.org/abs/2605.30924"
