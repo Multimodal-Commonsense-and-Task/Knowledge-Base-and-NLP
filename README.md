@@ -144,3 +144,7 @@
 * tRAG: Term-level Retrieval-Augmented Generation for Domain-Adaptive Retrieval (NAACL 2025) - Dohyeon Lee, Jongyoon Kim, Jihyuk Kim, Seung-won Hwang and Joonsuk Park.
 
   * This paper proposes tRAG, which retrieves domain-specific terms from a corpus-level term pool to generate pseudo-queries with unseen terms for domain-adaptive retrieval.
+
+* ECoRAG: Evidentiality-guided Compression for Long Context RAG (ACL Findings 2025) - Yeonseok Jeong, Jinsu Kim, Dohyeon Lee and Seung-won Hwang.
+
+  * This paper proposes ECoRAG, which compresses retrieved documents based on evidentiality and adaptively retrieves additional evidence when the compressed context is insufficient for answering.
