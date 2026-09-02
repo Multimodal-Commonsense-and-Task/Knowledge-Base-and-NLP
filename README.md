@@ -148,3 +148,23 @@
 * ECoRAG: Evidentiality-guided Compression for Long Context RAG (ACL Findings 2025) - Yeonseok Jeong, Jinsu Kim, Dohyeon Lee and Seung-won Hwang.
 
   * This paper proposes ECoRAG, which compresses retrieved documents based on evidentiality and adaptively retrieves additional evidence when the compressed context is insufficient for answering.
+
+* Age-Related Scattered Hypofluorescent Spots as an Adverse Prognostic Factor for Polypoidal Choroidal Vasculopathy (Ophthalmology Science 2025) - Kai Tzu-iunn Ong, Seo Hee Kim, Seonghee Choi, Eun Jee Chung, Min Kim, Christopher Seungkyu Lee, Jinyoung Yeo, and Eun Young Choi.
+
+  * This paper investigates the prognostic significance of age-related scattered hypofluorescent spots on late-phase indocyanine green angiography (ASHS-LIA) in polypoidal choroidal vasculopathy, using an AdaBoost model to predict disease stability, injection demand, and time to first remission.
+
+* PRINCIPLES: Synthetic Strategy Memory for Proactive Dialogue Agents (Findings of EMNLP 2025) - Namyoung Kim, Kai Tzu-iunn Ong, Yeonjun Hwang, Minseok Kang, Iiseo Jihn, Gayoung Kim, Minju Kim, and Jinyoung Yeo.
+
+  * The proposed PRINCIPLES is a synthetic strategy memory for proactive dialogue agents, derived through offline self-play simulations. It serves as reusable knowledge that guides strategy planning at inference time, expanding strategy coverage and mitigating preference bias without additional training or data annotation.
+
+* EMBGuard: Constructing Hazard-Aware Guardrails for Safe Planning in Embodied Agents (ICML 2026) - Dongwook Choi, Taeyoon Kwon, Bogyung Jeong, Minju Kim, Yeonjun Hwang, Hyojun Kim, Byungchul Kim, Young Kyun Jang, and Jinyoung Yeo.
+
+  * The proposed EMBGuard is the first MLLM-based safety guardrail for embodied agents, decoupling physical risk reasoning from agent policy. Given a (visual observation, action) pair, it identifies hazardous configurations and explains potential risks in natural language, accompanied by the EMBHazard training set and the EMBGuardTest benchmark.
+
+* PAC-Bench: Evaluating Multi-Agent Collaboration under Privacy Constraints (Findings of ACL 2026) - Minjun Park, Donghyun Kim, Hyeonjong Ju, Seungwon Lim, Dongwook Choi, Taeyoon Kwon, Minju Kim, and Jinyoung Yeo.
+
+  * The proposed PAC-Bench is a benchmark for systematically evaluating multi-agent collaboration under privacy constraints. Experiments reveal that privacy constraints substantially degrade collaboration performance through recurring coordination breakdowns, including early-stage privacy violations, overly conservative abstraction, and privacy-induced hallucinations.
+
+* Prior-based Noisy Text Data Filtering: Fast and Strong Alternative For Perplexity (ICLR 2026) - Yeongbin Seo, Gayoung Kim, Jaehyung Kim, and Jinyoung Yeo.
+
+  * The proposed prior-based filter estimates token priors from corpus-level term frequency statistics and filters documents by the mean and standard deviation of those priors, serving as a fast proxy to perplexity while requiring no model inference. It achieves the highest average performance across 20 downstream benchmarks while reducing time cost by over 1000x.
