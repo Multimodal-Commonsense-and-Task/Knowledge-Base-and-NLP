@@ -1,4 +1,4 @@
-# Inductive Reasoning Elicitation for Temporal Relation Understanding
+# Chaining Event Spans for Temporal Relation Grounding (EACL 2024)
 
 ## Overview
 

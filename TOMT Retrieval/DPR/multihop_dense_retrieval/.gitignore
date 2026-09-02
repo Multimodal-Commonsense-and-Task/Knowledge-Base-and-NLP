@@ -1,0 +1,8 @@
+data/
+mdr.egg*/
+apex/
+models/
+logs/
+.DS_Store
+*.pyc
+*.swp

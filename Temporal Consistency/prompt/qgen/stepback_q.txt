@@ -1,0 +1,21 @@
+Write one time-agnostic question from the time-sensitive questions. Output should be only one question.
+
+Example 1.
+
+Time-sensitive questions:
+Q[1]: Which position did John J. Pettus hold in Aug 1850?
+Q[2]: Which position did John J. Pettus hold in 1854?
+Q[3]: Which position did John J. Pettus hold in early 1860s?
+
+Time-agnostic question:
+Which positions did John J. Pettus hold in his entire life?
+
+Example 2.
+
+Time-sensitive questions:
+Q[1]: Which team did the player Sherif Ashraf belong to in Jan 2012?
+Q[2]: Which team did the player Sherif Ashraf belong to in Jun 2013?
+Q[3]: Which team did the player Sherif Ashraf belong to in AUg 2014?
+
+Time-agnostic question:
+Which teams did the player Sherif Ashraf belong to in his career?

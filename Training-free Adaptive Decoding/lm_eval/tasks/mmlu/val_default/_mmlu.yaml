@@ -1,0 +1,6 @@
+group: val_mmlu
+task:
+  - val_mmlu_stem
+  - val_mmlu_other
+  - val_mmlu_social_sciences
+  - val_mmlu_humanities

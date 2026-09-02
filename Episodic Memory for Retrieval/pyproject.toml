@@ -1,0 +1,23 @@
+[project]
+name = "emr"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alive-progress>=3.2.0",
+    "datasets>=4.0.0",
+    "faiss-gpu-cu12>=1.11.0",
+    "ftfy>=6.3.1",
+    "google-genai>=1.25.0",
+    "nvidia-cublas-cu12>=12.6.4.1",
+    "nvidia-cuda-runtime-cu12>=12.6.77",
+    "openai>=1.93.3",
+    "pyserini>=1.1.0",
+    "pytrec-eval>=0.5",
+    "sentence-transformers>=5.0.0",
+    "spacy>=3.8.7",
+    "tiktoken>=0.9.0",
+    "torch>=2.7.1",
+    "transformers>=4.53.1",
+]

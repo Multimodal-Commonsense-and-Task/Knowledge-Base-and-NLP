@@ -1,0 +1,14 @@
+torch==2.6.0
+transformers
+sentencepiece==0.2.0
+vllm==0.8.5
+tqdm
+nltk==3.9.1
+pyext
+snowflake-ml-python
+ftfy
+trl
+deepspeed
+peft
+pyterrier_adaptive
+pytrec_eval

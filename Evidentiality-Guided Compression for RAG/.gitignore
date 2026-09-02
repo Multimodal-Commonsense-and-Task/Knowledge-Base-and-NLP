@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# environments and secrets
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+ENV/
+
+# editors / OS
+.DS_Store
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# logs and job output
+*.log
+nohup.out
+slurm-*.out
+wandb/
+runs/
+# default logging dir of src/options.py
+*/checkpoint/
+
+# model weights (too large for GitHub, and reproducible from the scripts)
+*.pth
+*.pt
+*.bin
+*.ckpt
+*.safetensors
+*.h5
+*.npy
+*.npz
+*.pkl
+
+# data, checkpoints and predictions are produced by the pipeline.
+# ignore the contents but keep the directory skeleton (.gitkeep) so the
+# scripts' relative paths resolve on a fresh clone.
+data/**
+!data/**/
+!data/**/.gitkeep
+
+checkpoints/**
+!checkpoints/**/
+!checkpoints/**/.gitkeep
+
+*/output/**
+!*/output/**/
+!*/output/**/.gitkeep

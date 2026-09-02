@@ -53,7 +53,7 @@
 
   * The proposed relevance-guided generation, is divided in two simple subtasks, generating relevance explanations and guiding the generation to avoid negative generalization. Relevance-guided generation method is more robust to domain shifts when key biases cause sampled Psuedo Queries (PQ) to be irrelevant, negatively contributing to generalization. 
 
-* Inductive Reasoning Elicitation for Temporal Relation Understanding (EACL 2024) - Jongho Kim, Dohyeon Lee, Minsoo Kim, and Seung-won Hwang.
+* Chaining Event Spans for Temporal Relation Grounding (EACL 2024) - Jongho Kim, Dohyeon Lee, Minsoo Kim, and Seung-won Hwang.
 
   * The proposed TRN (timeline reasoning network) outperforms previous methods for temporal reading comprehension and temporal relation extraction tasks, by effectively resolving the spurious overlaps in answers using the predicted timeline.
 
@@ -88,3 +88,63 @@
 * Coffee-Gym: An Environment for Learning Feedback for Code Editing (EMNLP 2024) - Hyungjoo Chae, Taeyoon Kwon, Seungjun Moon, Yongho Song, Dongjin Kang, Kai Tzu-iunn Ong, Beong-woo Kwak, Seonghyeon Bae, Seung-won Hwang, and Jinyoung Yeo.
 
   * This paper presents Coffee-Gym, a comprehensive RL environment for training models that provide feedback on code editing.
+
+* Intended Target Identification for Anomia Patients with Gradient-based Selective Augmentation (EMNLP Findings 2024) - Jongho Kim, Romain Storaï and Seung-won Hwang.
+
+  * This paper improves LM-based intended target identification for anomia patients by using gradient-based selective augmentation to handle semantic paraphasia and unseen relevant terms.
+
+* Counterfactual-Consistency Prompting for Relative Temporal Understanding in Large Language Models (ACL 2025) - Jongho Kim and Seung-won Hwang.
+
+  * This paper uses counterfactual questions and collective constraints to improve the consistency of large language models in predicting temporal relations between events.
+
+* Adaptive Retrieval for Reasoning (ACL 2026) - Jongho Kim, Jaeyoung Kim, Jihyuk Kim, Yu Jin Kim, Seung-won Hwang and Moontae Lee.
+
+  * This paper proposes REPAIR, which uses reasoning plans as dense feedback signals to selectively guide adaptive retrieval and recover missing bridge documents for reasoning-intensive retrieval.
+
+* Query Variant Detection Using Retriever as Environment (NAACL 2025 industry) - Minji Seo, Youngwon Lee, Seung-won Hwang, Seoho Song, Hee-Cheol Seo and Young-In Song.
+
+  * This paper leverages the retriever as an environment, using retrieval outcomes as feedback to identify semantically equivalent query variants.
+
+* Interventional Speech Noise Injection for ASR Generalizable Spoken Language Understanding (EMNLP 2024) - YeonJoon Jung, Jaeseong Lee, Seungtaek Choi, Dohyeon Lee, Minsoo Kim and Seung-won Hwang.
+
+  * This paper proposes an interventional speech noise augmentation method that reduces ASR-specific bias by removing non-causal noise effects, improving the robustness of spoken language understanding to unseen ASR systems.
+
+* HARP: Hesitation-Aware Reframing in Transformer Inference Pass (NAACL 2025) - Romain Storaï and Seung-won Hwang.
+
+  * This paper presents HARP, a simple modification to the "off-the-shelf" Transformer forward pass that selectively applies additional computation when the model hesitates.
+
+* PROM: Pivoted and Regulated Optimization for Multilingual Instruction Learning (NAACL 2025) - Jaeseong Lee, Seung-won Hwang, Hojin Lee, Yunju Bak and Changmin Lee.
+
+  * This paper disentangles the roles of English and target-language data in multilingual instruction tuning to mitigate their negative interference.
+
+* HIL: Hybrid Isotropy Learning for Zero-shot Performance in Dense retrieval (NAACL 2024) - Jaeyoung Kim, Dohyeon Lee and Seung-won Hwang.
+
+  * This paper proposes a Hybrid Isotropy Learning (HIL) architecture that balances isotropic and anisotropic representations for improved zero-shot dense retrieval.
+
+* Beyond Markovian Forgetfulness: Episodic Memory for Reasoning-Intensive Retrieval (ACL 2026) - Dohyeon Lee, Yeonseok Jeong and Seung-won Hwang.
+
+  * This paper proposes Episodic Memory for Retrieval (EMR), which augments state-based retrieval with episodic memory to avoid repetitive reasoning cycles.
+
+* Relevance to Utility: Process-Supervised Rewrite for RAG (ACL Findings 2026) - Jaeyoung Kim, Jongho Kim, Seung-won Hwang, Seoho Song and Young-In Song.
+
+  * This paper proposes R2U, which learns document rewriting from downstream answer utility rather than retrieval relevance through process supervision.
+
+* UnIte: Uncertainty-based Iterative Document Sampling for Domain Adaptation in Information Retrieval (ACL Findings 2026) - Jongyoon Kim, Minseong Hwang and Seung-won Hwang.
+
+  * This paper proposes UnIte, which filters inherently noisy documents using aleatoric uncertainty and prioritizes informative ones using epistemic uncertainty for retrieval domain adaptation.
+
+* RaDA: Retrieval-augmented Web Agent Planning with LLMs (ACL Findings 2024) - Minsoo Kim, Victor Bursztyn, Eunyee Koh, Shunan Guo and Seung-won Hwang.
+
+  * This paper proposes RaDA, which dynamically retrieves exemplars for both task decomposition and action generation, enabling Web agent planning without manually crafted exemplars.
+
+* Smarter, Not Harder: Training-Free Adaptive Computation for Transformers (ACL Findings 2025) - Romain Storaï, Jaeseong Lee and Seung-won Hwang.
+
+  * This paper proposes IMPACT, a PACT method that perturbs network weights rather than input embeddings, enabling efficient and deterministic adaptive computation with KV-cache reuse.
+
+* tRAG: Term-level Retrieval-Augmented Generation for Domain-Adaptive Retrieval (NAACL 2025) - Dohyeon Lee, Jongyoon Kim, Jihyuk Kim, Seung-won Hwang and Joonsuk Park.
+
+  * This paper proposes tRAG, which retrieves domain-specific terms from a corpus-level term pool to generate pseudo-queries with unseen terms for domain-adaptive retrieval.
+
+* ECoRAG: Evidentiality-guided Compression for Long Context RAG (ACL Findings 2025) - Yeonseok Jeong, Jinsu Kim, Dohyeon Lee and Seung-won Hwang.
+
+  * This paper proposes ECoRAG, which compresses retrieved documents based on evidentiality and adaptively retrieves additional evidence when the compressed context is insufficient for answering.
