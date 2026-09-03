@@ -168,3 +168,7 @@
 * Prior-based Noisy Text Data Filtering: Fast and Strong Alternative For Perplexity (ICLR 2026) - Yeongbin Seo, Gayoung Kim, Jaehyung Kim, and Jinyoung Yeo.
 
   * The proposed prior-based filter estimates token priors from corpus-level term frequency statistics and filters documents by the mean and standard deviation of those priors, serving as a fast proxy to perplexity while requiring no model inference. It achieves the highest average performance across 20 downstream benchmarks while reducing time cost by over 1000x.
+
+* Evidentiality-aware Retrieval for Overcoming Abstractiveness in Open-Domain Question Answering (Findings of EACL 2024) - Yongho Song, Dahyun Lee, Myungha Jang, Seung-won Hwang, Kyungjae Lee, Dongha Lee, and Jinyoung Yeo.
+
+  * The proposed Evidentiality-Aware Dense Passage Retriever (EADPR) takes a data-centric approach to the misalignment between relevance and answerability in abstractive ODQA, synthesizing distractor samples by removing evidence spans from gold passages. Treating these distractors as both hard negatives and pseudo-positives, EADPR learns to rank evidence passages above distractors and distractors above irrelevant contexts.
