@@ -1,1 +1,1 @@
-"""PCV / ASHS-LIA 예후 분석 — PCA + AdaBoost 파이프라인."""
+"""EADPR — Evidentiality-Aware Dense Passage Retrieval (EACL 2024 Findings)."""

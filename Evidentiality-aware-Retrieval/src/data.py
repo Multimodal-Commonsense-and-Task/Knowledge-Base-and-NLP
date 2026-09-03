@@ -1,140 +1,197 @@
-"""엑셀 원본 -> 표준화 -> (선택) PCA 피처 선택 -> 학습용 CSV.
+"""데이터 스키마 · 로더 · 토이 데이터 생성기.
 
-노트북의 `Data: from df to cleaned df` 두 셀에 해당한다.
-표준화는 target 을 제외한 전 컬럼에 대해, split 이전에 전체 데이터로 수행한다 —
-노트북 그대로다. 누출 관점에서는 문제가 있으나 논문 수치 재현을 위해 유지한다.
+DPR 계열의 표준 포맷을 따른다. 한 줄 = 한 질문:
+
+    {"qid", "question", "answers": [...],
+     "positive_ctx":   {"pid", "title", "text"},          # p+  (gold evidence)
+     "distractor_ctx": {"pid", "title", "text"},          # p*  (augment 단계에서 채워짐)
+     "hard_negative_ctxs": [{"pid","title","text"}, ...], # p-  (BM25/ANCE 마이닝)
+     "supporting_pids": [...]}                            # multi-hop R@k 용 (선택)
+
+corpus.jsonl 은 {"pid", "title", "text"} 한 줄씩.
 """
 from __future__ import annotations
 
+import json
 import random
+import re
+from dataclasses import dataclass, field
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
 
-from . import config
+@dataclass
+class Passage:
+    pid: str
+    title: str
+    text: str
 
+    def to_dict(self) -> dict:
+        return {"pid": self.pid, "title": self.title, "text": self.text}
 
-def set_seed(seed: int = config.SEED) -> None:
-    """노트북과 동일하게 numpy / random / torch 를 시드한다.
-
-    모델은 sklearn 이라 torch RNG 를 쓰지 않지만, 원본이 시드하고 있어 그대로 둔다.
-    torch 가 없는 환경에서도 돌도록 임포트는 선택적으로 처리한다.
-    """
-    np.random.seed(seed)
-    random.seed(seed)
-    try:
-        import torch
-    except ImportError:
-        pass
-    else:
-        torch.manual_seed(seed)
+    @staticmethod
+    def from_dict(d: dict) -> "Passage":
+        return Passage(pid=str(d["pid"]), title=d.get("title", ""), text=d["text"])
 
 
-def load_raw(excel_path: Path | str = config.EXCEL_PATH,
-             sheet_name: str = config.SHEET_NAME) -> pd.DataFrame:
-    excel_path = Path(excel_path)
-    if not excel_path.exists():
-        raise FileNotFoundError(
-            f"원본 엑셀이 없다: {excel_path}\n"
-            "환자 데이터는 저장소에 포함되지 않는다. data/ 에 직접 두거나 --excel 로 경로를 줄 것."
+@dataclass
+class QAExample:
+    qid: str
+    question: str
+    answers: list[str]
+    positive_ctx: Passage
+    distractor_ctx: Passage | None = None
+    hard_negative_ctxs: list[Passage] = field(default_factory=list)
+    supporting_pids: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {
+            "qid": self.qid, "question": self.question, "answers": self.answers,
+            "positive_ctx": self.positive_ctx.to_dict(),
+            "distractor_ctx": self.distractor_ctx.to_dict() if self.distractor_ctx else None,
+            "hard_negative_ctxs": [c.to_dict() for c in self.hard_negative_ctxs],
+            "supporting_pids": self.supporting_pids,
+        }
+
+    @staticmethod
+    def from_dict(d: dict) -> "QAExample":
+        return QAExample(
+            qid=str(d["qid"]), question=d["question"], answers=list(d.get("answers", [])),
+            positive_ctx=Passage.from_dict(d["positive_ctx"]),
+            distractor_ctx=Passage.from_dict(d["distractor_ctx"]) if d.get("distractor_ctx") else None,
+            hard_negative_ctxs=[Passage.from_dict(c) for c in d.get("hard_negative_ctxs", [])],
+            supporting_pids=[str(p) for p in d.get("supporting_pids", [])],
         )
-    df = pd.read_excel(excel_path, sheet_name=sheet_name)
-    return df.rename(columns=config.COLUMN_RENAMES)
 
 
-def build_standardized(df: pd.DataFrame, task: str) -> pd.DataFrame:
-    """target 을 첫 컬럼으로 두고, 나머지를 표준화한 프레임을 만든다."""
-    target, drop_cols = config.TASKS[task]
+# --------------------------------------------------------------------------- io
 
-    df_y = df[target]
-    df_x = df.drop(columns=drop_cols).drop(columns=target)
-    if task in config.SHIFT_TARGET_BY_ONE:
-        df_y = df_y - 1
-
-    out = pd.concat([df_y, df_x], axis=1, join="inner")
-    out = out.dropna()
-    out = out.astype(float)
-
-    feature_cols = out.columns[1:]
-    out[feature_cols] = StandardScaler().fit_transform(out[feature_cols])
-    return out
+def read_jsonl(path: Path | str) -> list[dict]:
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"{path} 가 없다. `main.py toy` 로 토이 데이터를 만들 수 있다.")
+    with open(path, encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
 
 
-def select_features_pca(df_std: pd.DataFrame, task: str,
-                        truncate: bool = False, verbose: bool = True) -> pd.DataFrame:
-    """pca 패키지의 topfeat 중 type=='best' 인 피처만 남긴다."""
-    try:
-        from pca import pca
-    except ImportError as e:
-        raise ImportError(
-            "PCA 단계에는 'pca' 패키지가 필요하다: pip install pca\n"
-            "PCA 없이 돌리려면 --no-pca 를 쓸 것."
-        ) from e
+def write_jsonl(rows, path: Path | str) -> Path:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    return path
 
-    target = config.TASKS[task][0]
-    df_x = df_std.drop(columns=target)
 
-    model = pca()
-    out = model.fit_transform(df_x)
-    if verbose:
-        print(out["topfeat"])
+def load_examples(path: Path | str) -> list[QAExample]:
+    return [QAExample.from_dict(d) for d in read_jsonl(path)]
 
-    kept: list[str] = []
-    for _, row in out["topfeat"].iterrows():
-        if row["type"] != "best":
+
+def load_corpus(path: Path | str) -> list[Passage]:
+    return [Passage.from_dict(d) for d in read_jsonl(path)]
+
+
+# ------------------------------------------------------------------- span 분할
+
+_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
+
+
+def split_spans(text: str, min_chars: int = 0) -> list[str]:
+    """p+ 를 n 개의 discrete span 으로 나눈다 (논문은 문장 단위를 가정한다)."""
+    spans = [s.strip() for s in _SENT_SPLIT.split(text.strip()) if s.strip()]
+    if min_chars:
+        spans = [s for s in spans if len(s) >= min_chars] or spans
+    return spans
+
+
+def remove_span(spans: list[str], idx: int) -> str:
+    """p* = [s_l ; s_r] — i 번째 span 만 빼고 이어 붙인다 (§3.1)."""
+    return " ".join(s for k, s in enumerate(spans) if k != idx).strip()
+
+
+def mask_answer(text: str, answers: list[str]) -> str:
+    """AA score(Eq.9) 용 p' — 정답 문자열을 그대로 제거한다."""
+    out = text
+    for a in sorted(answers, key=len, reverse=True):
+        if not a:
             continue
-        if row["feature"] in kept:
-            continue
-        kept.append(row["feature"])
-        # ⚠ config.PCA_TRUNCATION_SENTINEL 주석 참고 — 원본에서는 이 분기가 발화하지 않는다.
-        if truncate and row["feature"] == config.PCA_TRUNCATION_SENTINEL:
-            break
-
-    if verbose:
-        print(len(kept))
-        print(kept)
-
-    df_x_kept = df_x.drop(df_x.columns.difference(kept), axis=1)
-    return pd.concat([df_std[target], df_x_kept], axis=1, join="inner")
+        out = re.sub(re.escape(a), " ", out, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", out).strip()
 
 
-def prepare(task: str, use_pca: bool = True, truncate: bool = False,
-            excel_path: Path | str = config.EXCEL_PATH,
-            out_path: Path | None = None, verbose: bool = True) -> Path:
-    """엑셀 -> 학습용 CSV. 저장 경로를 돌려준다."""
-    set_seed()
-    df = load_raw(excel_path)
-    if verbose:
-        for col in df.columns:
-            print(col)
+# ------------------------------------------------------------------ 토이 데이터
 
-    df_std = build_standardized(df, task)
-    if verbose:
-        print(df_std.columns)
-        print(len(df_std.columns))
-        print("----")
+_TOPICS = [
+    ("Easter Bunny", "German Lutherans",
+     "where does the origin of the easter bunny come from"),
+    ("Mount Everest", "8848 metres", "how tall is mount everest"),
+    ("Great Barrier Reef", "Coral Sea", "where is the great barrier reef located"),
+    ("Alan Turing", "1912", "when was alan turing born"),
+    ("Amazon River", "South America", "which continent is the amazon river on"),
+    ("Penicillin", "Alexander Fleming", "who discovered penicillin"),
+    ("Mona Lisa", "Louvre", "which museum holds the mona lisa"),
+    ("Photosynthesis", "chloroplasts", "where does photosynthesis take place"),
+    ("Halley's Comet", "76 years", "how often does halleys comet appear"),
+    ("Esperanto", "L. L. Zamenhof", "who created the esperanto language"),
+]
 
-    if use_pca:
-        df_std = select_features_pca(df_std, task, truncate=truncate, verbose=verbose)
-        if verbose:
-            print(len(df_std.columns))
-
-    out_path = Path(out_path) if out_path else config.prepared_csv_path(task, use_pca, truncate)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    df_std.to_csv(out_path, index=False)
-    if verbose:
-        print(f"[saved] {out_path}  shape={df_std.shape}")
-    return out_path
+_FILLER = [
+    "The subject has been discussed in a wide range of popular sources.",
+    "Several encyclopedias describe the topic in some detail.",
+    "Its cultural significance is frequently noted by commentators.",
+    "Later accounts expand on the same material with minor variation.",
+]
 
 
-def load_prepared(csv_path: Path | str, seed: int = config.SEED
-                  ) -> tuple[pd.Series, pd.DataFrame]:
-    """CSV 를 읽어 셔플하고 (y, X) 로 나눈다. 첫 컬럼이 target 이다."""
-    csv_path = Path(csv_path)
-    if not csv_path.exists():
-        raise FileNotFoundError(f"{csv_path} 가 없다. 먼저 `main.py prepare` 를 돌릴 것.")
-    df = pd.read_csv(csv_path)
-    shuffled = df.sample(frac=1, random_state=seed).reset_index(drop=True)
-    return shuffled.iloc[:, 0], shuffled.iloc[:, 1:]
+def build_toy_dataset(out_dir: Path | str, n_train: int = 48, n_dev: int = 16,
+                      n_distractor_docs: int = 60, seed: int = 42):
+    """다운로드 없이 파이프라인 전체를 돌려보기 위한 소형 합성 데이터.
+
+    각 gold passage 는 '정답이 든 문장 1개 + filler 문장 몇 개' 로 구성돼 있어,
+    span 제거 기반 distractor 증강(§3.1)이 의미 있게 동작한다.
+    """
+    rng = random.Random(seed)
+    out_dir = Path(out_dir)
+    corpus: list[dict] = []
+    examples: list[dict] = []
+
+    def make_gold(topic, answer, pid):
+        evidence = f"The record states that {topic} is associated with {answer}."
+        body = rng.sample(_FILLER, k=2)
+        pos = rng.randint(0, len(body))
+        sents = body[:pos] + [evidence] + body[pos:]
+        return {"pid": pid, "title": topic, "text": " ".join(sents)}
+
+    n_total = n_train + n_dev
+    for i in range(n_total):
+        topic, answer, qtmpl = _TOPICS[i % len(_TOPICS)]
+        topic_i = topic if i < len(_TOPICS) else f"{topic} ({i // len(_TOPICS)})"
+        pid = f"gold-{i}"
+        gold = make_gold(topic_i, answer, pid)
+        corpus.append(gold)
+        examples.append({
+            "qid": f"q-{i}", "question": qtmpl, "answers": [answer],
+            "positive_ctx": gold, "distractor_ctx": None,
+            "hard_negative_ctxs": [], "supporting_pids": [pid],
+        })
+
+    for j in range(n_distractor_docs):
+        topic, _, _ = _TOPICS[j % len(_TOPICS)]
+        corpus.append({"pid": f"noise-{j}", "title": f"{topic} in culture",
+                       "text": " ".join(rng.sample(_FILLER, k=3))})
+
+    # BM25/ANCE 마이닝을 흉내 낸 hard negative — 같은 토픽의 noise 문서를 붙인다.
+    by_title = {}
+    for c in corpus:
+        by_title.setdefault(c["title"].split(" (")[0], []).append(c)
+    for ex in examples:
+        base = ex["positive_ctx"]["title"].split(" (")[0]
+        cands = [c for c in by_title.get(base, []) if c["pid"] != ex["positive_ctx"]["pid"]]
+        ex["hard_negative_ctxs"] = rng.sample(cands, k=min(1, len(cands)))
+
+    rng.shuffle(examples)
+    train, dev = examples[:n_train], examples[n_train:]
+    write_jsonl(train, out_dir / "train.jsonl")
+    write_jsonl(dev, out_dir / "dev.jsonl")
+    write_jsonl(corpus, out_dir / "corpus.jsonl")
+    print(f"[toy] train={len(train)} dev={len(dev)} corpus={len(corpus)} -> {out_dir}")
+    return out_dir

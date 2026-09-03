@@ -1,78 +1,80 @@
-"""데이터 경로 · 태스크 정의 · 시드 · 플롯 상수.
+"""EADPR 하이퍼파라미터.
 
-노트북 상단 셀에 흩어져 있던 설정을 한곳에 모은 것이다.
-숫자를 바꾸면 논문 수치가 바뀐다 — 기본값은 노트북과 동일하게 유지할 것.
+값은 논문 Appendix C (Implementation Details) 를 따른다.
+  - dual encoder: BERT-base
+  - 40 epochs, batch size 16, lr 2e-5, Adam eps 1e-8, betas (0.9, 0.999)
+  - λ (Eq.7 의 distractor 가중치) = 1.0,  {0.1,0.2,0.5,0.9,1.0} 중 선택
+  - τ1, τ2 (Eq.8) = 1.0, grid search 로 결정
 """
+from __future__ import annotations
+
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
-FIG_DIR = ROOT / "figures"
+CKPT_DIR = ROOT / "checkpoints"
 
-EXCEL_PATH = DATA_DIR / "new_hypoF_PCV 220919.xlsx"
-SHEET_NAME = "cleaned_0"
-
-SEED = 2022
-
-# 논문 표기에 맞춘 컬럼명. 이 rename 이 PCA_TRUNCATION_SENTINEL 과 충돌한다 (아래 주석 참고).
-COLUMN_RENAMES = {
-    "HypoF": "ASHS-LIA",
-    "basline_logMAR": "baseline_logMAR",
-    "largest_polyp": "Largest polyp diameter",
-    "number_of_polyps": "Polyp number",
-    "lipid": "Lipid exudation",
-    "CNV_location": "Polyp location",
-    "SRHeme": "SRH",
-}
-
-# task -> (target, 함께 버릴 피처들)
-TASKS = {
-    "task1": ("group", ["injection_demand", "vision_gain", "rec_period"]),
-    "task2": ("injection_demand", ["total_inj_n", "group", "vision_gain", "rec_period"]),
-    "task8": ("time_to_rem",
-              ["group", "rec_period", "total_inj_n", "vision_gain", "injection_demand", "recur"]),
-}
-
-# 노트북에 주석 처리돼 있던 태스크들. 되살리려면 TASKS 로 옮길 것.
-TASKS_DISABLED = {
-    "task3": ("total_inj_n", ["injection_demand", "group", "vision_gain", "rec_period"]),
-    "task4": ("rec_period", ["group", "vision_gain", "injection_demand", "recur"]),
-    "task5": ("recur", ["group", "vision_gain", "injection_demand", "rec_period"]),
-    "task6": ("vision_gain", ["group", "injection_demand", "rec_period"]),
-}
-
-TASK_KIND = {"task1": "binary", "task2": "binary", "task8": "regression"}
-
-# task1 의 target 은 1/2 로 들어와 있어 0/1 로 내린다 (노트북 `df_y = df_y - 1`).
-SHIFT_TARGET_BY_ONE = {"task1"}
-
-# ⚠ 노트북 원본은 truncation 기준을 "HypoF" 로 두는데, load 직후 "ASHS-LIA" 로 rename 되므로
-#   이 조건은 절대 참이 되지 않는다 — 즉 --pca-truncation 은 원본에서 사실상 무동작이었다.
-#   재현을 위해 기본값을 그대로 두되, 의도대로 쓰려면 "ASHS-LIA" 로 바꿀 것.
-PCA_TRUNCATION_SENTINEL = "HypoF"
-
-# MDI 표에서 제외할 인덱스. 분류/회귀가 서로 다르다 (노트북 그대로).
-DROP_FROM_MDI = {
-    "binary": ["recur", "fu_period", "time_to_rem"],
-    "regression": ["recur", "fu_period"],
-}
-
-# 제목의 (Number of Features = ...) 에 더하는 상수. 분류 +2, 회귀 +1 (노트북 그대로).
-FEATURE_COUNT_OFFSET = {"binary": 2, "regression": 1}
-
-HIGHLIGHT_FEATURE = "ASHS-LIA"
-COLOR_HIGHLIGHT = "#e01e5a"
-COLOR_DEFAULT = "#236AA7"
-
-# 노트북의 세 셀이 서로 다른 행 구간으로 같은 모델을 반복 학습했다 (민감도 확인).
-# None = 전체. 주석에 남아 있던 task1 용 구간도 함께 옮겨 둔다.
-DEFAULT_WINDOWS = {
-    "binary": [None, (32, None), (31, 57)],      # 노트북 task2 기준
-    "regression": [None, (5, 45), (10, 55)],
-}
-WINDOWS_TASK1_FROM_COMMENTS = [None, (32, None), (25, 50)]
+SEED = 42
 
 
-def prepared_csv_path(task: str, pca: bool, truncation: bool) -> Path:
-    """노트북의 f'data/{task}_PCA_{_pca}_truncate_{pca_truncation}.csv' 와 동일한 이름."""
-    return DATA_DIR / f"{task}_PCA_{pca}_truncate_{truncation}.csv"
+@dataclass
+class ModelConfig:
+    encoder_name: str = "bert-base-uncased"
+    # tiny=True 면 사전학습 가중치를 받지 않고 소형 랜덤 초기화 BERT 를 쓴다.
+    # 다운로드 없이 파이프라인 전체를 돌려보기 위한 경로다 (성능은 의미 없다).
+    tiny: bool = False
+    tiny_vocab_size: int = 4096
+    tiny_hidden_size: int = 64
+    tiny_layers: int = 2
+    tiny_heads: int = 2
+    tiny_intermediate: int = 128
+    max_q_len: int = 64
+    max_p_len: int = 192
+    share_encoder: bool = False   # DPR 은 question/passage 인코더를 분리한다
+
+
+@dataclass
+class LossConfig:
+    """Eq.7 의 λ, Eq.8 의 τ1 / τ2."""
+    lambda_distractor: float = 1.0   # λ < 1 로 두면 distractor 의 음성 효과를 약화
+    tau_hn: float = 1.0              # τ1 · L_HN
+    tau_pp: float = 1.0              # τ2 · L_PP
+    use_hn: bool = True
+    use_pp: bool = True
+
+
+@dataclass
+class TrainConfig:
+    epochs: int = 40
+    batch_size: int = 16
+    lr: float = 2e-5
+    adam_eps: float = 1e-8
+    adam_betas: tuple[float, float] = (0.9, 0.999)
+    warmup_ratio: float = 0.1
+    max_grad_norm: float = 2.0
+    device: str = "auto"            # auto | cpu | cuda
+    log_every: int = 10
+
+
+@dataclass
+class DistractorConfig:
+    """§3.1 Augmenting Distractor Samples."""
+    qa_model_name: str = "allenai/unifiedqa-t5-base"   # 논문의 UnifiedQA-T5
+    tiny: bool = False
+    max_candidates: int = 8      # p+ 를 나눈 span 중 후보로 삼을 최대 개수
+    min_span_chars: int = 10     # 너무 짧은 span 은 후보에서 제외
+    # 논문은 confidence 가 가장 낮은(= perplexity 가 가장 높은) 후보를 distractor 로 고른다.
+    selection: str = "highest_perplexity"
+
+
+@dataclass
+class EADPRConfig:
+    model: ModelConfig = field(default_factory=ModelConfig)
+    loss: LossConfig = field(default_factory=LossConfig)
+    train: TrainConfig = field(default_factory=TrainConfig)
+    distractor: DistractorConfig = field(default_factory=DistractorConfig)
+    seed: int = SEED
+
+    def to_dict(self) -> dict:
+        return asdict(self)

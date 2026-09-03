@@ -1,7 +1,4 @@
+torch>=2.0
+transformers>=4.30
 numpy
-pandas
-scipy
-scikit-learn
-matplotlib
-openpyxl
-pca
+tqdm
