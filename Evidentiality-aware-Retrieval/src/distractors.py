@@ -1,12 +1,13 @@
-"""§3.1 Augmenting Distractor Samples — span 제거 + pseudo-evidence 선택.
+"""Section 3.1, Augmenting Distractor Samples -- span removal + pseudo-evidence.
 
-Step 1. gold evidence passage p+ = [s_l ; s+ ; s_r] 를 n 개 span 으로 나누고,
-        각 span 을 하나씩 빼서 후보 p*_i = [s_l ; s_r] 를 n 개 만든다.
-Step 2. 생성형 QA 모델 θ 에 (q, p*_i) 를 넣어 정답의 confidence P_θ(a | q, p*_i) 를 잰다.
-        confidence 가 가장 낮은 = perplexity 가 가장 높은 후보를 p* 로 고른다.
-        confidence 가 급락했다는 건 그 span 이 답에 기여했다는 뜻이다.
+Step 1. Split the gold evidence passage p+ = [s_l ; s+ ; s_r] into n spans and leave
+        one out at a time to form n candidates p*_i = [s_l ; s_r].
+Step 2. Feed (q, p*_i) to a generative QA model theta and measure the confidence of
+        the gold answer, P_theta(a | q, p*_i). Take the candidate with the lowest
+        confidence -- equivalently the highest perplexity -- as p*. A sharp drop in
+        confidence means that span was contributing to the answer.
 
-논문은 θ 로 UnifiedQA-T5 를 쓴다.
+The paper uses UnifiedQA-T5 as theta.
 """
 from __future__ import annotations
 
@@ -21,7 +22,7 @@ from .data import Passage, QAExample, remove_span, split_spans, write_jsonl
 
 
 class QAScorer:
-    """P_θ(a | q, p) 의 perplexity 를 재는 생성형 QA 모델 래퍼."""
+    """Wrapper around a generative QA model that scores the perplexity of P(a | q, p)."""
 
     def __init__(self, cfg: DistractorConfig, device: str = "cpu"):
         from transformers import (AutoModelForSeq2SeqLM, AutoTokenizer,
@@ -29,7 +30,8 @@ class QAScorer:
         self.cfg = cfg
         self.device = device
         if cfg.tiny:
-            # 다운로드 없이 돌리기 위한 소형 랜덤 T5. 점수는 의미가 없고 형태만 같다.
+            # A small randomly initialized T5 so this runs without downloads. The
+            # scores are meaningless; only the shape of the computation is the same.
             from .modeling import HashTokenizer
             t5cfg = T5Config(vocab_size=4096, d_model=64, d_ff=128, num_layers=2,
                              num_decoder_layers=2, num_heads=2, d_kv=32,
@@ -43,13 +45,13 @@ class QAScorer:
 
     @staticmethod
     def _prompt(question: str, passage: str) -> str:
-        # UnifiedQA 입력 규약: "question \n context"
+        # UnifiedQA input convention: "question \n context"
         return f"{question.strip()} \\n {passage.strip()}"
 
     @torch.no_grad()
     def perplexity(self, questions: list[str], passages: list[str],
                    answers: list[str]) -> list[float]:
-        """정답 토큰들의 평균 negative log-likelihood 를 지수화한 값."""
+        """Exponentiated mean negative log-likelihood of the answer tokens."""
         enc = self.tokenizer([self._prompt(q, p) for q, p in zip(questions, passages)],
                              padding=True, truncation=True, max_length=384,
                              return_tensors="pt")
@@ -73,38 +75,39 @@ class QAScorer:
 
 
 def make_candidates(passage: Passage, cfg: DistractorConfig) -> list[tuple[int, str]]:
-    """Step 1 — span 하나씩 제거한 후보들. (제거한 span 인덱스, 본문)."""
+    """Step 1 -- one candidate per removed span, as (removed span index, text)."""
     spans = split_spans(passage.text, min_chars=cfg.min_span_chars)
     if len(spans) < 2:
-        return []                       # 뺄 span 이 없으면 distractor 를 만들 수 없다
+        return []                       # nothing to remove, so no distractor is possible
     idxs = list(range(len(spans)))[: cfg.max_candidates]
     return [(i, remove_span(spans, i)) for i in idxs]
 
 
 def augment_example(ex: QAExample, scorer: QAScorer | None,
                     cfg: DistractorConfig) -> QAExample:
-    """한 예제에 p* 를 채워 넣는다."""
+    """Fill in p* for a single example."""
     cands = make_candidates(ex.positive_ctx, cfg)
     if not cands:
         return ex
 
     answer = ex.answers[0] if ex.answers else ""
     if scorer is None or not answer:
-        # QA 모델 없이 쓰는 폴백: 가장 긴 span 을 제거한 후보 (정보량이 큰 span 이라는 가정).
+        # Fallback without a QA model: remove the longest span, assuming it carries
+        # the most information.
         chosen_idx, chosen_text = min(cands, key=lambda c: len(c[1]))
         score = float("nan")
     else:
         ppl = scorer.perplexity([ex.question] * len(cands),
                                 [c[1] for c in cands],
                                 [answer] * len(cands))
-        # confidence 최저 = perplexity 최고
+        # Lowest confidence == highest perplexity.
         best = max(range(len(cands)), key=lambda k: ppl[k])
         chosen_idx, chosen_text = cands[best]
         score = ppl[best]
 
     ex.distractor_ctx = Passage(pid=f"{ex.positive_ctx.pid}::distractor",
                                 title=ex.positive_ctx.title, text=chosen_text)
-    ex.removed_span_idx = chosen_idx      # 분석용 (직렬화에는 포함되지 않는다)
+    ex.removed_span_idx = chosen_idx      # for analysis; not serialized
     ex.distractor_ppl = score
     return ex
 
@@ -114,10 +117,10 @@ def augment_dataset(examples: list[QAExample], cfg: DistractorConfig,
                     use_qa_model: bool = True) -> list[QAExample]:
     scorer = QAScorer(cfg, device=device) if use_qa_model else None
     if scorer is None:
-        print("[augment] QA 모델 없이 길이 휴리스틱으로 distractor 를 고른다")
+        print("[augment] no QA model; selecting distractors by a length heuristic")
     out = [augment_example(ex, scorer, cfg) for ex in tqdm(examples, desc="augment")]
     n = sum(1 for e in out if e.distractor_ctx)
-    print(f"[augment] distractor 생성 {n}/{len(out)}")
+    print(f"[augment] distractors created: {n}/{len(out)}")
     if out_path:
         write_jsonl([e.to_dict() for e in out], out_path)
         print(f"[augment] saved -> {out_path}")

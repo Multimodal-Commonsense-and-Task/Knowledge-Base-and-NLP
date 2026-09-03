@@ -1,7 +1,8 @@
-"""AdaBoost 학습 + MDI(Mean Decrease in Impurity) 피처 중요도 표.
+"""AdaBoost fitting plus the MDI (Mean Decrease in Impurity) feature-importance table.
 
-노트북에서 여섯 번 복붙돼 있던 셀(분류 3 · 회귀 3)을 하나로 합친 것이다.
-셀 사이의 차이는 (a) 행 구간 (b) 분류/회귀 뿐이라 인자로 뺐다.
+This merges the six near-duplicate cells of the notebook (three classification,
+three regression). The only differences between them were (a) the row window and
+(b) classification vs regression, so both became arguments.
 """
 from __future__ import annotations
 
@@ -19,10 +20,10 @@ Window = tuple[int | None, int | None] | None
 @dataclass
 class FitResult:
     model: object
-    gini: pd.DataFrame          # 0 인 행을 제거한, 정렬된 MDI 표
-    n_features: int             # 0 제거 *이전* 행 수 (노트북의 n_features)
-    fit_score: float            # 학습에 쓴 구간에서의 score
-    title_score: float          # 플롯 제목에 쓰는 score — 아래 주석 참고
+    gini: pd.DataFrame          # sorted MDI table with zero rows removed
+    n_features: int             # row count *before* zeros were removed (the notebook's n_features)
+    fit_score: float            # score on the window actually fitted
+    title_score: float          # score used in the plot title -- see the note below
     window: Window = None
     n_samples: int = 0
     dropped_from_mdi: list[str] = field(default_factory=list)
@@ -50,7 +51,7 @@ def _mdi_table(model, columns, kind: str) -> tuple[pd.DataFrame, int, list[str]]
             gini = gini.drop(index=name)
             dropped.append(name)
 
-    # 노트북은 0 을 걸러내기 *전*의 행 수를 제목에 쓴다.
+    # The notebook takes the row count *before* filtering out zeros for the title.
     n_features = gini.shape[0]
     gini = gini[gini[col] != 0]
     return gini, n_features, dropped
@@ -58,22 +59,24 @@ def _mdi_table(model, columns, kind: str) -> tuple[pd.DataFrame, int, list[str]]
 
 def fit(X: pd.DataFrame, y: pd.Series, kind: str, window: Window = None,
         seed: int = config.SEED) -> FitResult:
-    """한 구간에 대해 AdaBoost 를 학습하고 MDI 표를 만든다.
+    """Fit AdaBoost on one window and build the MDI table.
 
-    title_score 주의: 노트북은 제목의 R2 를 **항상 전체 X_train/y_train** 으로 계산한다.
-    구간 학습 셀에서도 그렇다. 즉 제목 숫자는 그 구간의 성능이 아니다.
-    재현을 위해 그대로 두되, 구간 성능은 fit_score 에 따로 담는다.
+    A note on title_score: the notebook always computes the R2 shown in the title on
+    the **full** X_train / y_train, even in the cells that fit on a window. So the
+    number in the title is not that window's performance. That behaviour is kept for
+    reproducibility, with the window's own score exposed separately as fit_score.
     """
     set_seed(seed)
     X_fit, y_fit = slice_window(X, y, window)
 
     if kind == "binary":
-        # n_estimators 는 노트북대로 **전체** 피처 수를 쓴다 (구간과 무관).
+        # n_estimators uses the **full** feature count, as in the notebook,
+        # regardless of the window.
         model = AdaBoostClassifier(n_estimators=len(X.columns), random_state=0)
     elif kind == "regression":
         model = AdaBoostRegressor()
     else:
-        raise ValueError(f"알 수 없는 kind: {kind}")
+        raise ValueError(f"unknown kind: {kind}")
 
     model.fit(X_fit, y_fit)
     fit_score = model.score(X_fit, y_fit)
@@ -89,12 +92,12 @@ def fit(X: pd.DataFrame, y: pd.Series, kind: str, window: Window = None,
 def run_windows(X: pd.DataFrame, y: pd.Series, kind: str,
                 windows: list[Window] | None = None,
                 seed: int = config.SEED) -> list[FitResult]:
-    """노트북의 세 셀에 해당하는 구간들을 순서대로 돌린다."""
+    """Run the windows corresponding to the notebook's three cells, in order."""
     if windows is None:
         windows = config.DEFAULT_WINDOWS[kind]
     results = []
     for w in windows:
         label = "full" if w is None else f"[{w[0]}:{w[1]}]"
-        print(f"\n===== {kind} · window {label} =====")
+        print(f"\n===== {kind} - window {label} =====")
         results.append(fit(X, y, kind, window=w, seed=seed))
     return results

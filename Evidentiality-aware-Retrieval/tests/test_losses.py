@@ -1,6 +1,6 @@
-"""손실함수가 논문 수식(Eq.3 / Eq.5 / Eq.7 / Eq.8)과 맞는지 확인한다.
+"""Check the losses against the paper's equations (Eq.3 / Eq.5 / Eq.7 / Eq.8).
 
-    python -m pytest tests/ -q      또는      python tests/test_losses.py
+    python -m pytest tests/ -q      or      python tests/test_losses.py
 """
 import sys
 from pathlib import Path
@@ -23,7 +23,7 @@ def _scores(pos: float, dis: float, neg: float):
 
 
 def test_ordering_is_rewarded():
-    """<q,p+> > <q,p*> > <q,p-> 인 배치가 뒤집힌 배치보다 손실이 낮아야 한다."""
+    """A batch ordered <q,p+> > <q,p*> > <q,p-> must cost less than an inverted one."""
     cfg = LossConfig()
     good = eadpr_loss(*_scores(6.0, 3.0, 0.0), None, cfg)["loss"]
     bad = eadpr_loss(*_scores(0.0, 3.0, 6.0), None, cfg)["loss"]
@@ -39,7 +39,7 @@ def test_hn_matches_equation_3():
 
 
 def test_dpr_reduces_to_vanilla_when_lambda_zero():
-    """λ=0 이면 Eq.7 이 표준 DPR(Eq.1)과 같아진다."""
+    """At lambda=0, Eq.7 coincides with vanilla DPR (Eq.1)."""
     s_pos = torch.tensor([2.0, 1.0])
     s_neg = torch.tensor([[0.1, 0.2], [0.3, 0.4]])
     s_dis = torch.tensor([5.0, 5.0])
@@ -48,7 +48,7 @@ def test_dpr_reduces_to_vanilla_when_lambda_zero():
 
 
 def test_lambda_monotonic():
-    """λ 가 커질수록 distractor 의 음성 효과가 세져 L_dpr 이 커진다."""
+    """A larger lambda strengthens the distractor as a negative, raising L_dpr."""
     s_pos = torch.tensor([2.0, 1.0])
     s_neg = torch.tensor([[0.1, 0.2], [0.3, 0.4]])
     s_dis = torch.tensor([5.0, 5.0])
@@ -66,7 +66,7 @@ def test_gradients_flow():
 
 
 def test_hard_negatives_enter_pp_denominator():
-    """명시적 hard negative 를 넣으면 L_PP 분모가 커져 손실이 증가한다."""
+    """Adding explicit hard negatives enlarges the L_PP denominator, raising the loss."""
     cfg = LossConfig()
     s_pp, s_ds = _scores(6.0, 3.0, 0.0)
     without = eadpr_loss(s_pp, s_ds, None, cfg)["loss_pp"]
@@ -75,7 +75,7 @@ def test_hard_negatives_enter_pp_denominator():
 
 
 def test_ablation_flags():
-    """--no-hn / --no-pp 가 해당 항을 실제로 제거한다."""
+    """--no-hn / --no-pp actually remove the corresponding terms."""
     s_pp, s_ds = _scores(6.0, 3.0, 0.0)
     full = eadpr_loss(s_pp, s_ds, None, LossConfig())
     only_dpr = eadpr_loss(s_pp, s_ds, None, LossConfig(use_hn=False, use_pp=False))

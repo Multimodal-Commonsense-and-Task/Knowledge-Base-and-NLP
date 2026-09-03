@@ -1,10 +1,11 @@
-"""DPR 스타일 dual encoder [f_q, f_p].
+"""DPR-style dual encoder [f_q, f_p].
 
-논문은 BERT-base 두 개(질문/패시지 분리)를 쓰고 [CLS] 표현을 임베딩으로 삼는다.
-관련도는 내적: <q, p> = f_q(q) · f_p(p).
+The paper uses two BERT-base encoders (question and passage kept separate) and takes
+the [CLS] representation as the embedding. Relevance is the inner product:
+<q, p> = f_q(q) . f_p(p).
 
-tiny=True 는 사전학습 가중치를 받지 않고 소형 랜덤 BERT 를 만든다.
-다운로드 없이 파이프라인을 끝까지 돌려보기 위한 경로다.
+With tiny=True no pretrained weights are downloaded; a small randomly initialized
+BERT is built instead, so the pipeline can be run end to end offline.
 """
 from __future__ import annotations
 
@@ -18,10 +19,10 @@ from .config import ModelConfig
 
 
 class HashTokenizer:
-    """오프라인 폴백 토크나이저. 단어를 해시로 vocab 에 사상한다.
+    """Offline fallback tokenizer that maps words into the vocabulary by hashing.
 
-    사전학습 토크나이저를 받지 못하는 환경에서도 형태가 같은 배치를 만들기 위한 것이며,
-    의미 있는 subword 분절을 하지는 않는다.
+    It produces batches of the right shape when a pretrained tokenizer cannot be
+    downloaded. It does not perform meaningful subword segmentation.
     """
 
     def __init__(self, vocab_size: int = 4096):
@@ -70,7 +71,7 @@ def build_tokenizer(cfg: ModelConfig):
 
 
 class DualEncoder(nn.Module):
-    """[f_q, f_p]. encode_* 는 [CLS] 벡터를 돌려준다."""
+    """[f_q, f_p]. The encode_* methods return the [CLS] vector."""
 
     def __init__(self, cfg: ModelConfig):
         super().__init__()
@@ -99,12 +100,12 @@ class DualEncoder(nn.Module):
 
     @staticmethod
     def similarity(q_emb: torch.Tensor, p_emb: torch.Tensor) -> torch.Tensor:
-        """<q_i, p_j> 행렬 (내적)."""
+        """The <q_i, p_j> matrix (inner product)."""
         return q_emb @ p_emb.t()
 
 
 def passage_text(p) -> str:
-    """DPR 관례대로 title 과 text 를 이어 붙인다."""
+    """Concatenate title and text, following the DPR convention."""
     title = getattr(p, "title", "") or ""
     text = getattr(p, "text", "") if not isinstance(p, str) else p
     return f"{title} [SEP] {text}".strip() if title else text

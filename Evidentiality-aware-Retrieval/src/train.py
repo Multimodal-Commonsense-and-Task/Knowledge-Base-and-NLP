@@ -1,7 +1,8 @@
-"""EADPR 학습 루프.
+"""EADPR training loop.
 
-배치마다 (q, p+, p*, [p-]) 를 인코딩해 Eq.8 의 L_eadpr 를 최소화한다.
-in-batch negative 를 쓰므로 배치 안의 다른 질문의 p+ 가 p- 역할을 겸한다.
+Each batch encodes (q, p+, p*, [p-]) and minimizes L_eadpr from Eq.8. Because
+in-batch negatives are used, the gold passages of the other questions in the batch
+double as p-.
 """
 from __future__ import annotations
 
@@ -27,10 +28,10 @@ def resolve_device(name: str) -> str:
 
 
 def cap_threads(n: int | None) -> None:
-    """CPU 스레드 상한.
+    """Cap the number of CPU threads.
 
-    코어가 많은 노드에서 작은 텐서를 돌리면 스레드 오버헤드가 연산을 압도한다 —
-    이 저장소의 tiny 경로에서 52 스레드 대비 4 스레드가 100 배 이상 빨랐다.
+    On a machine with many cores, thread overhead swamps the computation for small
+    tensors -- on the tiny path here, 4 threads ran over 100x faster than 52.
     """
     if n and n > 0:
         torch.set_num_threads(n)
@@ -45,11 +46,11 @@ def set_seed(seed: int) -> None:
 
 def make_batches(examples: list[QAExample], batch_size: int, shuffle: bool = True,
                  rng: random.Random | None = None) -> list[list[QAExample]]:
-    """distractor 가 없는 예제는 학습에서 제외한다 — L_HN / L_PP 가 정의되지 않는다."""
+    """Examples without a distractor are dropped -- L_HN and L_PP are undefined there."""
     usable = [e for e in examples if e.distractor_ctx is not None]
     if shuffle:
         (rng or random).shuffle(usable)
-    # in-batch negative 를 쓰려면 배치 크기가 2 이상이어야 한다.
+    # In-batch negatives require at least two examples per batch.
     return [usable[i:i + batch_size] for i in range(0, len(usable), batch_size)
             if len(usable[i:i + batch_size]) >= 2]
 
@@ -62,7 +63,7 @@ def encode_batch(model: DualEncoder, batch: list[QAExample]):
     s_pp = DualEncoder.similarity(q, p_pos)
     s_ds = DualEncoder.similarity(q, p_dis)
 
-    # 명시적 hard negative (BM25 / ANCE). 질문마다 1개씩 쓰고, 배치 전체가 공유한다.
+    # Explicit hard negatives (BM25 / ANCE): one per question, shared across the batch.
     hns = [e.hard_negative_ctxs[0] for e in batch if e.hard_negative_ctxs]
     s_hn = None
     if len(hns) == len(batch) and hns:
@@ -83,8 +84,8 @@ def train(examples: list[QAExample], cfg: EADPRConfig,
     batches = make_batches(examples, cfg.train.batch_size, shuffle=False)
     if not batches:
         raise ValueError(
-            "학습 가능한 배치가 없다. distractor 가 채워졌는지(`main.py augment`), "
-            "배치 크기가 2 이상인지 확인할 것.")
+            "No trainable batches. Check that distractors were filled in "
+            "(`main.py augment`) and that the batch size is at least 2.")
 
     opt = AdamW(model.parameters(), lr=cfg.train.lr, eps=cfg.train.adam_eps,
                 betas=cfg.train.adam_betas)

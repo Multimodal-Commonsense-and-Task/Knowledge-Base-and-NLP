@@ -1,14 +1,17 @@
-"""§5 Analysis — Answer-Awareness score 와 robustness 시뮬레이션.
+"""Section 5 analysis -- Answer-Awareness score and the robustness simulation.
 
 AA score (Eq.9)
-    정답 span 을 지운 p' 를 만들고, 모델이 p+ 를 p' 보다 높게 매기는 비율을 잰다.
+    Build p' by deleting the answer span, then measure how often the model still
+    ranks p+ above p':
 
-        AA = 1 - (1/T) Σ_i 1[ <q_i, p+_i> ≤ <q_i, p'_i> ]
+        AA = 1 - (1/T) sum_i 1[ <q_i, p+_i> <= <q_i, p'_i> ]
 
-    DPR 은 이 값이 이론적 상한(1.0)에 크게 못 미친다는 것이 논문의 관찰이다.
+    The paper's observation is that DPR falls well short of the theoretical upper
+    bound of 1.0 here.
 
 Robustness
-    합성 distractor 를 코퍼스에 섞어 넣고 검색 성능이 얼마나 떨어지는지 본다.
+    Inject synthesized distractors into the corpus and measure how much retrieval
+    performance degrades.
 """
 from __future__ import annotations
 
@@ -36,19 +39,19 @@ def question_type(question: str) -> str:
 def answer_awareness(model: DualEncoder, examples: list[QAExample],
                      device: str = "cpu", batch_size: int = 16,
                      by_question_type: bool = True) -> dict:
-    """Eq.9. 정답이 본문에 실제로 등장하는 예제만 대상으로 한다."""
+    """Eq.9. Only examples whose answer actually occurs in the passage are used."""
     model.eval().to(device)
 
     triplets = []
     for ex in examples:
         masked = mask_answer(ex.positive_ctx.text, ex.answers)
         if masked == ex.positive_ctx.text:
-            continue                       # 정답 문자열이 본문에 없어 p' 를 만들 수 없다
+            continue                       # answer string absent, so p' cannot be built
         triplets.append((ex, Passage(pid=f"{ex.positive_ctx.pid}::masked",
                                      title=ex.positive_ctx.title, text=masked)))
     if not triplets:
         return {"aa_score": float("nan"), "n_triplets": 0,
-                "note": "정답 span 이 본문에 등장하는 예제가 없다"}
+                "note": "no example has its answer span present in the passage"}
 
     wins, per_type = 0, defaultdict(lambda: [0, 0])
     for i in range(0, len(triplets), batch_size):
@@ -73,13 +76,13 @@ def answer_awareness(model: DualEncoder, examples: list[QAExample],
 
 
 def synthesize_corpus_distractors(examples: list[QAExample]) -> list[Passage]:
-    """augment 단계에서 만든 p* 를 코퍼스 오염원으로 재사용한다."""
+    """Reuse the p* produced by the augment step as corpus contaminants."""
     return [ex.distractor_ctx for ex in examples if ex.distractor_ctx is not None]
 
 
 def robustness_test(model: DualEncoder, examples: list[QAExample],
                     corpus: list[Passage], ks=(1, 5, 20), device: str = "cpu") -> dict:
-    """distractor 를 코퍼스에 주입하기 전/후의 검색 성능을 비교한다."""
+    """Compare retrieval performance before and after injecting distractors."""
     injected = synthesize_corpus_distractors(examples)
     before = evaluate_retrieval(model, examples, corpus, ks=ks, device=device)
     after = evaluate_retrieval(model, examples, corpus + injected, ks=ks, device=device)

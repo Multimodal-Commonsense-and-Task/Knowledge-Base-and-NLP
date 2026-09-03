@@ -1,14 +1,14 @@
-"""데이터 스키마 · 로더 · 토이 데이터 생성기.
+"""Data schema, loaders and the toy dataset builder.
 
-DPR 계열의 표준 포맷을 따른다. 한 줄 = 한 질문:
+The format follows the DPR convention: one line per question.
 
     {"qid", "question", "answers": [...],
-     "positive_ctx":   {"pid", "title", "text"},          # p+  (gold evidence)
-     "distractor_ctx": {"pid", "title", "text"},          # p*  (augment 단계에서 채워짐)
-     "hard_negative_ctxs": [{"pid","title","text"}, ...], # p-  (BM25/ANCE 마이닝)
-     "supporting_pids": [...]}                            # multi-hop R@k 용 (선택)
+     "positive_ctx":   {"pid", "title", "text"},           # p+  (gold evidence)
+     "distractor_ctx": {"pid", "title", "text"},           # p*  (filled in by `augment`)
+     "hard_negative_ctxs": [{"pid","title","text"}, ...],  # p-  (BM25 / ANCE mining)
+     "supporting_pids": [...]}                             # multi-hop R@k (optional)
 
-corpus.jsonl 은 {"pid", "title", "text"} 한 줄씩.
+corpus.jsonl holds one {"pid", "title", "text"} per line.
 """
 from __future__ import annotations
 
@@ -68,7 +68,8 @@ class QAExample:
 def read_jsonl(path: Path | str) -> list[dict]:
     path = Path(path)
     if not path.exists():
-        raise FileNotFoundError(f"{path} 가 없다. `main.py toy` 로 토이 데이터를 만들 수 있다.")
+        raise FileNotFoundError(
+            f"{path} does not exist. Run `main.py toy` to generate a toy dataset.")
     with open(path, encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
 
@@ -90,13 +91,13 @@ def load_corpus(path: Path | str) -> list[Passage]:
     return [Passage.from_dict(d) for d in read_jsonl(path)]
 
 
-# ------------------------------------------------------------------- span 분할
+# ------------------------------------------------------------------ span splitting
 
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
 
 def split_spans(text: str, min_chars: int = 0) -> list[str]:
-    """p+ 를 n 개의 discrete span 으로 나눈다 (논문은 문장 단위를 가정한다)."""
+    """Split p+ into n discrete spans (the paper assumes sentence granularity)."""
     spans = [s.strip() for s in _SENT_SPLIT.split(text.strip()) if s.strip()]
     if min_chars:
         spans = [s for s in spans if len(s) >= min_chars] or spans
@@ -104,12 +105,12 @@ def split_spans(text: str, min_chars: int = 0) -> list[str]:
 
 
 def remove_span(spans: list[str], idx: int) -> str:
-    """p* = [s_l ; s_r] — i 번째 span 만 빼고 이어 붙인다 (§3.1)."""
+    """p* = [s_l ; s_r] -- rejoin every span except the i-th one (Section 3.1)."""
     return " ".join(s for k, s in enumerate(spans) if k != idx).strip()
 
 
 def mask_answer(text: str, answers: list[str]) -> str:
-    """AA score(Eq.9) 용 p' — 정답 문자열을 그대로 제거한다."""
+    """p' for the AA score (Eq.9) -- delete the answer string verbatim."""
     out = text
     for a in sorted(answers, key=len, reverse=True):
         if not a:
@@ -118,7 +119,7 @@ def mask_answer(text: str, answers: list[str]) -> str:
     return re.sub(r"\s+", " ", out).strip()
 
 
-# ------------------------------------------------------------------ 토이 데이터
+# -------------------------------------------------------------------- toy dataset
 
 _TOPICS = [
     ("Easter Bunny", "German Lutherans",
@@ -144,10 +145,10 @@ _FILLER = [
 
 def build_toy_dataset(out_dir: Path | str, n_train: int = 48, n_dev: int = 16,
                       n_distractor_docs: int = 60, seed: int = 42):
-    """다운로드 없이 파이프라인 전체를 돌려보기 위한 소형 합성 데이터.
+    """A small synthetic dataset for exercising the pipeline without downloads.
 
-    각 gold passage 는 '정답이 든 문장 1개 + filler 문장 몇 개' 로 구성돼 있어,
-    span 제거 기반 distractor 증강(§3.1)이 의미 있게 동작한다.
+    Each gold passage is one answer-bearing sentence plus a few filler sentences,
+    so span-removal distractor augmentation (Section 3.1) has something to work on.
     """
     rng = random.Random(seed)
     out_dir = Path(out_dir)
@@ -179,7 +180,7 @@ def build_toy_dataset(out_dir: Path | str, n_train: int = 48, n_dev: int = 16,
         corpus.append({"pid": f"noise-{j}", "title": f"{topic} in culture",
                        "text": " ".join(rng.sample(_FILLER, k=3))})
 
-    # BM25/ANCE 마이닝을 흉내 낸 hard negative — 같은 토픽의 noise 문서를 붙인다.
+    # Stand-in for BM25 / ANCE mining: attach a noise document on the same topic.
     by_title = {}
     for c in corpus:
         by_title.setdefault(c["title"].split(" (")[0], []).append(c)

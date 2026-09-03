@@ -1,9 +1,10 @@
-"""코퍼스 인코딩 · 검색 · 검색 지표.
+"""Corpus encoding, search, and retrieval metrics.
 
-지표 (논문 Table 2 / Table 4)
-  Top-k hit accuracy : 상위 k 개 안에 정답 문자열을 담은 패시지가 있는가 (single-hop)
-  MRR                : 첫 정답 패시지 순위의 역수 평균
-  R@k                : 주석된 supporting context 가 **전부** 상위 k 안에 있는 비율 (multi-hop)
+Metrics (Tables 2 and 4 of the paper)
+  Top-k hit accuracy : is a passage containing the answer string in the top k (single-hop)
+  MRR                : mean reciprocal rank of the first answer-bearing passage
+  R@k                : fraction of questions where *all* annotated supporting contexts
+                       appear in the top k (multi-hop)
 """
 from __future__ import annotations
 
@@ -28,7 +29,7 @@ def encode_corpus(model: DualEncoder, corpus: list[Passage], batch_size: int = 3
 @torch.no_grad()
 def search(model: DualEncoder, questions: list[str], corpus_emb: torch.Tensor,
            top_k: int = 20, batch_size: int = 32, device: str = "cpu"):
-    """(scores, indices) 를 돌려준다. 둘 다 (len(questions), top_k)."""
+    """Return (scores, indices), both shaped (len(questions), top_k)."""
     model.eval().to(device)
     k = min(top_k, corpus_emb.size(0))
     all_s, all_i = [], []
@@ -71,7 +72,7 @@ def evaluate_retrieval(model: DualEncoder, examples: list[QAExample],
             if any(answer_hit[:kk]):
                 hits[k] += 1
             if ex.supporting_pids:
-                # multi-hop R@k — supporting context 를 전부 담아야 성공
+                # Multi-hop R@k -- every supporting context must be present.
                 if set(ex.supporting_pids).issubset(set(pid_at[row_i][:kk])):
                     recall[k] += 1
 

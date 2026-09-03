@@ -1,4 +1,4 @@
-"""MDI 가로 막대 그래프. ASHS-LIA 만 다른 색으로 강조한다."""
+"""Horizontal MDI bar chart, with ASHS-LIA highlighted in a separate colour."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -12,7 +12,7 @@ from .models import FitResult
 
 def plot_mdi(result: FitResult, kind: str, out_path: Path | str | None = None,
              show: bool = False):
-    """노트북 플롯을 그대로 재현한다 (제목·색·여백·범례까지)."""
+    """Reproduce the notebook's plot -- title, colours, margins and legend included."""
     title_name = "AdaBoost Regressor" if kind == "regression" else "AdaBoost Classifier"
     offset = config.FEATURE_COUNT_OFFSET[kind]
     score = round(result.title_score, 3)
@@ -45,5 +45,5 @@ def plot_mdi(result: FitResult, kind: str, out_path: Path | str | None = None,
 
 
 def use_headless_backend() -> None:
-    """디스플레이 없는 서버에서 저장만 할 때 호출한다."""
+    """Call this when saving figures on a server with no display."""
     matplotlib.use("Agg")

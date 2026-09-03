@@ -36,12 +36,12 @@ The AdaBoost models ranked ASHS-LIA as the 3rd, 7th, and 8th most contributory f
 ├── main.py              # CLI — prepare / run / all
 ├── requirements.txt
 ├── src/
-│   ├── config.py        # 경로 · 태스크 정의 · 시드 · 플롯 상수
-│   ├── data.py          # 엑셀 로드 → 표준화 → (선택) PCA 피처 선택 → CSV
-│   ├── models.py        # AdaBoost 학습 + MDI 피처 중요도 표
-│   └── plots.py         # MDI 가로 막대 그래프 (ASHS-LIA 강조)
-├── data/                # 환자 데이터 (저장소에 포함되지 않음)
-└── PCV_main_copy.ipynb  # 원본 노트북
+│   ├── config.py        # paths, task definitions, seed, plot constants
+│   ├── data.py          # excel → standardization → (optional) PCA selection → CSV
+│   ├── models.py        # AdaBoost fitting + MDI feature-importance table
+│   └── plots.py         # horizontal MDI bar chart (ASHS-LIA highlighted)
+├── data/                # patient data (not included in this repository)
+└── PCV_main_copy.ipynb  # the original notebook
 ```
 
 ## Usage
@@ -49,39 +49,43 @@ The AdaBoost models ranked ASHS-LIA as the 3rd, 7th, and 8th most contributory f
 ```bash
 pip install -r requirements.txt
 
-# 엑셀 → 표준화(+PCA) → 학습용 CSV
+# excel → standardization (+PCA) → training CSV
 python main.py prepare --task task8
 
-# CSV → AdaBoost → MDI 플롯
+# CSV → AdaBoost → MDI plot
 python main.py run --task task8 --save
 
-# 한 번에
+# both at once
 python main.py all --task task8 --save
 ```
 
-`--task` 로 모델이 정해진다 — `task1`(disease stability) · `task2`(injection demand) 는
-AdaBoost 분류, `task8`(time to first remission) 은 AdaBoost 회귀다.
-`--no-pca` 로 PCA 피처 선택을 건너뛸 수 있고, `--windows 32: 31:57` 로 행 구간을 지정한다
-(기본값은 노트북이 쓰던 세 구간).
+`--task` selects the model: `task1` (disease stability) and `task2` (injection demand)
+are AdaBoost classifiers, `task8` (time to first remission) is an AdaBoost regressor.
+`--no-pca` skips PCA feature selection, and `--windows 32: 31:57` overrides the row
+windows (the default is the three the notebook used).
 
-환자 데이터(`data/new_hypoF_PCV 220919.xlsx`)는 저장소에 포함되지 않는다.
-`--excel` 로 경로를 지정할 수 있다.
+The patient data (`data/new_hypoF_PCV 220919.xlsx`) is not part of this repository.
+Pass a path with `--excel`.
 
 ## Notes on the refactor
 
-노트북을 옮기면서 **수치는 바꾸지 않았다** — 원본 셀을 그대로 실행한 결과와
-`src/` 모듈의 결과가 세 태스크 × 세 구간 전부에서 일치하는 것을 확인했다
-(fit score · title score · `feature_importances_`).
+Porting the notebook **did not change any number** — running the original cells and
+running the `src/` modules produce identical results across all three tasks and all
+three row windows (fit score, title score, and `feature_importances_`).
 
-원본에 있던 아래 세 가지는 재현을 위해 **동작을 유지하되 코드에 표시해 두었다**:
+Three quirks of the original are **preserved but flagged in the code**:
 
-- **플롯 제목의 R2 는 항상 전체 학습셋 기준이다.** 구간(`[32:]` 등)으로 학습한 셀에서도
-  제목 숫자는 전체 `X_train` 으로 계산된다. 즉 제목의 값은 그 구간의 성능이 아니다.
-  구간 성능은 `FitResult.fit_score`, 제목 값은 `FitResult.title_score` 로 분리해 두었다.
-- **`--pca-truncation` 은 무동작이다.** 기준값이 `"HypoF"` 인데 로드 직후 `"ASHS-LIA"` 로
-  rename 되므로 조건이 성립하지 않는다. `config.PCA_TRUNCATION_SENTINEL` 참고.
-- **표준화가 셔플·구간 분리 이전에 전체 데이터로 수행된다.**
+- **The R2 in the plot title is always computed on the full training set.** Even in the
+  cells that fit on a window (`[32:]` and so on), the title score is computed over the
+  whole `X_train`, so the number in the title is not that window's performance. The
+  window's own score is exposed as `FitResult.fit_score`, and the title value as
+  `FitResult.title_score`.
+- **`--pca-truncation` is a no-op.** It keys on `"HypoF"`, but the column is renamed to
+  `"ASHS-LIA"` immediately after loading, so the condition never holds. See
+  `config.PCA_TRUNCATION_SENTINEL`.
+- **Standardization runs on the whole dataset, before shuffling and windowing.**
 
-원본의 `make_classification(...)` 호출은 결과에 쓰이지 않아 제거했다 (전역 RNG 에도
-영향이 없어 수치가 바뀌지 않는다). 주석 처리돼 있던 statsmodels GLM/Logit/WLS 블록과
-`task3~task6` 정의는 `config.TASKS_DISABLED` 에 옮겨 두었다.
+The original `make_classification(...)` calls were removed: their output was never used,
+and they touch no global RNG, so the numbers are unaffected. The commented-out
+statsmodels GLM/Logit/WLS blocks and the `task3`–`task6` definitions were moved to
+`config.TASKS_DISABLED`.
